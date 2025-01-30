@@ -6,7 +6,7 @@ metadata:
   labels:
     team: team-oebs
 spec:
-  image: repo.adeo.no:5443/oebs/oebs-valp-api:0.0.1
+  image: {{ image }}
   port: 8080
   replicas:
     min: 3
@@ -31,6 +31,7 @@ spec:
     application:
       enabled: true
       allowAllUsers: true
+      tenant: nav.no
   accessPolicy:
     inbound:
       rules:

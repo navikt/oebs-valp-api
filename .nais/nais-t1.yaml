@@ -6,7 +6,7 @@ metadata:
   labels:
     team: team-oebs
 spec:
-  image: repo.adeo.no:5443/oebs/oebs-valp-api:0.0.1
+  image: {{ image }}
   port: 8080
   replicas:
     min: 1
@@ -31,12 +31,7 @@ spec:
     application:
       enabled: true
       allowAllUsers: true
-  accessPolicy:
-    inbound:
-      rules:
-         - application: oebs-valp-api-t1
-           namespace: team-oebs
-           cluster: dev-fss
+      tenant: trygdeetaten.no
 
   prometheus:
     enabled: true
