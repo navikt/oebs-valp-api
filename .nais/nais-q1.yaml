@@ -50,3 +50,4 @@ spec:
 
   ingresses:
      - "https://oebs-valp-api-q1.intern.dev.nav.no"
+     - "https://oebs-valp-api-q1.dev-fss-pub.nais.io"
