@@ -14,7 +14,7 @@ public class KallLoggRepositoryImpl implements KallLoggRepositoryCustom {
 
 	@Override
 	public void pingKallLogg() {
-		entityManager.createQuery("SELECT k FROM KallLogg k WHERE kall_logg_id = 0", KallLogg.class) //
+		entityManager.createQuery("SELECT k FROM KallLogg k WHERE k.id = 0", KallLogg.class) //
 				.getResultList();
 	}
 }
