@@ -31,7 +31,7 @@ spec:
     application:
       enabled: true
       allowAllUsers: true
-      tenant: trygdeetaten.no
+      # tenant: trygdeetaten.no
 
   prometheus:
     enabled: true
