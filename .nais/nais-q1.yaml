@@ -49,4 +49,4 @@ spec:
         mountPath: "/var/run/secrets/nais.io/vault"
 
   ingresses:
-     - "https://oebs-valp-api-q1.dev.intern.nav.no"
+     - "https://oebs-valp-api-q1.intern.dev.nav.no"
