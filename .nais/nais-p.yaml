@@ -1,0 +1,56 @@
+apiVersion: nais.io/v1alpha1
+kind: Application
+metadata:
+  name: oebs-valp-api
+  namespace: team-oebs
+  labels:
+    team: team-oebs
+spec:
+  image: repo.adeo.no:5443/oebs/oebs-valp-api:0.0.1
+  port: 8080
+  replicas:
+    min: 3
+    max: 3
+    cpuThresholdPercentage: 50
+  liveness:
+    path: /internal/isalive
+    initialDelay: 60
+    timeout: 10
+  readiness:
+    path: /internal/isready
+    initialDelay: 60
+    timeout: 20
+  resources:
+    requests:
+      cpu: 400m
+      memory: 1024Mi
+    limits:
+      cpu: 4000m
+      memory: 2048Mi
+  azure:
+    application:
+      enabled: true
+      allowAllUsers: true
+  accessPolicy:
+    inbound:
+      rules:
+         - application: oebs-valp-api
+           namespace: team-oebs
+           cluster: prod-fss
+    outbound:
+      external:
+        - host: nav.eye-share.com
+        - host: nav.vieri.no
+        - host: vieri-api-prod.developer.azure-api.net
+
+  prometheus:
+    enabled: true
+    path: /actuator/prometheus
+  vault:
+    enabled: true
+    paths:
+      - kvPath: "kv/prod/fss/oebs-valp-api/team-oebs"
+        mountPath: "/var/run/secrets/nais.io/vault"
+
+  ingresses:
+     - "https://oebs-valp-api.intern.nav.no"
