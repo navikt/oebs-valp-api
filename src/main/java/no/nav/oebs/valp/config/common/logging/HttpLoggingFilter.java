@@ -12,10 +12,11 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import jakarta.validation.constraints.NotNull;
 import no.nav.oebs.valp.config.common.mdc.MdcOperations;
 import no.nav.oebs.valp.db.entity.KallLogg;
 import no.nav.oebs.valp.db.repository.KallLoggRepository;
-import org.jetbrains.annotations.NotNull;
+//import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.filter.OncePerRequestFilter;

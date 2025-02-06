@@ -25,7 +25,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@Table(name = "XXRTV_RESTAPI_LOGG")
+@Table(name = "XXRTV_VALP_LOGG")
 public class KallLogg {
 
 	public static final String RETNING_INN = "INN";
@@ -35,8 +35,8 @@ public class KallLogg {
 	public static final String TYPE_REST = "REST";
 	public static final String METHOD_POST = "POST";
 	@Id
-	@SequenceGenerator(name = "XXRTV_API_SEQ", sequenceName = "XXRTV_API_SEQ", allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "XXRTV_API_SEQ")
+	@SequenceGenerator(name = "XXRTV_VALP_SEQ", sequenceName = "XXRTV_VALP_SEQ", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "XXRTV_VALP_SEQ")
 	@Column(name = "KALL_LOGG_ID")
 	private Long id;
 

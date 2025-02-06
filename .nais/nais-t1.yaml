@@ -30,8 +30,22 @@ spec:
   azure:
     application:
       enabled: true
-      allowAllUsers: true
+      allowAllUsers: false
+      claims:
+        groups:
+          - id: "d6a9b16c-d8c6-48de-9b16-b6a814e60e1a"
       # tenant: trygdeetaten.no
+  accessPolicy:
+    inbound:
+      rules:
+        - application: app-a
+
+        - application: app-b
+          namespace: other-namespace
+
+        - application: app-c
+          namespace: other-namespace
+          cluster: other-cluster
 
   prometheus:
     enabled: true
