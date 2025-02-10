@@ -38,7 +38,7 @@ spec:
   accessPolicy:
     inbound:
       rules:
-        - application: oebs-fullmakt-dev
+        - application: oebs-fullmakt-godkjenning-api
 
 
         # - application: app-b
