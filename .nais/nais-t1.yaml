@@ -38,7 +38,8 @@ spec:
   accessPolicy:
     inbound:
       rules:
-        - application: oebs-valp-api-t1
+        - application: oebs-fullmakt-dev
+
 
         # - application: app-b
         #   namespace: other-namespace
