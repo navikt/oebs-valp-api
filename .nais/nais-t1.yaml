@@ -38,14 +38,15 @@ spec:
   accessPolicy:
     inbound:
       rules:
-        - application: app-a
+        - application: oebs-valp-api-t1
 
-        - application: app-b
-          namespace: other-namespace
+        # - application: app-b
+        #   namespace: other-namespace
 
-        - application: app-c
-          namespace: other-namespace
-          cluster: other-cluster
+        - application: tiltaksokonomi
+          namespace: team-mulighetsrommet
+          cluster: dev-gcp
+        -
 
   prometheus:
     enabled: true

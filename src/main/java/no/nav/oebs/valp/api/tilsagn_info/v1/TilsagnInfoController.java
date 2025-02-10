@@ -8,6 +8,7 @@ import no.nav.oebs.valp.api.common.swagger.ValpSwagger;
 import no.nav.oebs.valp.api.tilsagn.v1.TilsagnService;
 import no.nav.oebs.valp.api.tilsagn_info.v1.model.TilsagnInfoRequest;
 import no.nav.oebs.valp.config.SwaggerConfig;
+import no.nav.security.token.support.core.api.Protected;
 import no.nav.security.token.support.core.api.Unprotected;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +34,7 @@ public class TilsagnInfoController {
 			this.service = service;
 	}
 
-	@Unprotected
+	@Protected
 	@GetMapping(path = "/tilsagn-info")
 	@ValpSwagger
 	public String finnTilsagn_transaksjoner(

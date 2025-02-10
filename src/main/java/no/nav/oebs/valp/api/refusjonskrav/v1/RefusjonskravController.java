@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import no.nav.oebs.valp.Application;
 import no.nav.oebs.valp.api.common.swagger.ValpSwagger;
 import no.nav.oebs.valp.config.SwaggerConfig;
+import no.nav.security.token.support.core.api.Protected;
 import no.nav.security.token.support.core.api.Unprotected;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,7 @@ public class RefusjonskravController {
 		this.service = service;
 	}
 
-	@Unprotected
+	@Protected
 	@ValpSwagger
 	@PostMapping(path = "/refusjonskrav", consumes = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<String> lagreRefusjonskrav( @RequestParam(defaultValue = "202") String org_id,
