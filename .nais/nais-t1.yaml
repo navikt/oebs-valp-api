@@ -46,7 +46,6 @@ spec:
         - application: tiltaksokonomi
           namespace: team-mulighetsrommet
           cluster: dev-gcp
-        -
 
   prometheus:
     enabled: true
