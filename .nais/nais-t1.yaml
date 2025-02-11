@@ -30,11 +30,13 @@ spec:
   azure:
     application:
       enabled: true
-      allowAllUsers: false
-      claims:
-        groups:
-          - id: "d6a9b16c-d8c6-48de-9b16-b6a814e60e1a"
-      # tenant: trygdeetaten.no
+      tenant: trygdeetaten.no
+      # allowAllUsers: true
+      # claims:
+      #  groups:
+      #    - id: "d6a9b16c-d8c6-48de-9b16-b6a814e60e1a"
+      #    - id: "efb663cf-06a1-4269-aa87-3f65033c64fc"
+
   accessPolicy:
     inbound:
       rules:
@@ -42,9 +44,6 @@ spec:
         - application: tiltaksokonomi
           namespace: team-mulighetsrommet
           cluster: dev-gcp
-    outbound:
-      rules:
-        - application: oebs-fullmakt-godkjenning-api
 
   prometheus:
     enabled: true
