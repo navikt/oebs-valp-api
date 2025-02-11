@@ -39,14 +39,12 @@ spec:
     inbound:
       rules:
         - application: oebs-fullmakt-godkjenning-api
-
-
-        # - application: app-b
-        #   namespace: other-namespace
-
         - application: tiltaksokonomi
           namespace: team-mulighetsrommet
           cluster: dev-gcp
+    outbound:
+      rules:
+        application: oebs-fullmakt-godkjenning-api
 
   prometheus:
     enabled: true
