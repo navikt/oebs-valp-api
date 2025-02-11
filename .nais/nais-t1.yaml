@@ -44,7 +44,7 @@ spec:
           cluster: dev-gcp
     outbound:
       rules:
-        application: oebs-fullmakt-godkjenning-api
+        - application: oebs-fullmakt-godkjenning-api
 
   prometheus:
     enabled: true
