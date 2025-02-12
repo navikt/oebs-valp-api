@@ -40,9 +40,7 @@ public class RefusjonskravService extends ObjektMaps {
 			return result.getMessage();
 
 		} catch (Exception e) {
-			String error = "Feilet under lagring av refusjonskrav i Oebs; feilmelding=" + e.getMessage();
-
-			throw new TechnicalPlsqlException(error); // + e);
+			throw new TechnicalPlsqlException(e.getMessage());
 		}
 	}
 }

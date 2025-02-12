@@ -22,7 +22,7 @@ import jakarta.validation.Valid;
 @Slf4j
 @RestController
 @Validated
-@RequestMapping(path = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+@RequestMapping(path = "/api/v1")
 @Tag(name = SwaggerConfig.VALP, description = "Valp")
 public class TilsagnInfoController {
 
@@ -35,8 +35,8 @@ public class TilsagnInfoController {
 	}
 
 	@Protected
-	@GetMapping(path = "/tilsagn-info")
 	@ValpSwagger
+	@GetMapping(path = "/tilsagn-info", produces = MediaType.TEXT_PLAIN_VALUE + ";charset=UTF-8")
 	public String finnTilsagn_transaksjoner(
 			@RequestParam(name = "org_id", defaultValue = "202") Integer org_id,
 			@RequestParam(name = "po_number") @Parameter(description = "f.eks. 3170085") String po_number)

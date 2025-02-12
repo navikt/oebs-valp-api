@@ -35,7 +35,7 @@ public class RefusjonskravInfoController {
 
 	@Protected
 	@ValpSwagger
-	@GetMapping(path = "/refusjonskrav-info", consumes = {MediaType.APPLICATION_JSON_VALUE})
+	@GetMapping(path = "/refusjonskrav-info", produces = MediaType.TEXT_PLAIN_VALUE + ";charset=UTF-8") //APPLICATION_JSON_VALUE + ";charset=UTF-8")
 	public String finnRefusjonskravtransaksjoner(
 			@RequestParam(name = "org_id", defaultValue = "202") Integer org_id,
 			@RequestParam(name = "po_number") @Parameter(description = "f.eks. 3170085") String po_number)

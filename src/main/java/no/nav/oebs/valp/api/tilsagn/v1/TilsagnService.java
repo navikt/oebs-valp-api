@@ -40,9 +40,7 @@ public class TilsagnService extends ObjektMaps {
 			return result.getMessage();
 
 		} catch (Exception e) {
-			String error = "Feilet under lagring av tilsagn i Oebs; feilmelding=" + e.getMessage();
-
-			throw new TechnicalPlsqlException(error + e);
+			throw new TechnicalPlsqlException(e.getMessage());
 		}
 	}
 }

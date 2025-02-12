@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Configuration;
 public class SwaggerConfig {
 
 	public static final String VALP = "Valp API";
-	public static final String FELLES = "Felles API";
 
 	@Value("${oebs.environment}")
 	String env;
