@@ -6,7 +6,6 @@ import no.nav.oebs.valp.Application;
 import no.nav.oebs.valp.api.common.swagger.ValpSwagger;
 import no.nav.oebs.valp.config.SwaggerConfig;
 import no.nav.security.token.support.core.api.Protected;
-import no.nav.security.token.support.core.api.Unprotected;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -19,11 +18,11 @@ import jakarta.validation.Valid;
 @Slf4j
 @RestController
 @Validated
-@RequestMapping(path = "/api/v1")
-@Tag(name = SwaggerConfig.VALP)
+@RequestMapping(path = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+@Tag(name = SwaggerConfig.VALP, description = "Valp")
 public class RefusjonskravController {
 
-	private static final Logger logger = LoggerFactory.getLogger(Application.class);
+	//private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
 	private final RefusjonskravService service;
 
@@ -33,7 +32,7 @@ public class RefusjonskravController {
 
 	@Protected
 	@ValpSwagger
-	@PostMapping(path = "/refusjonskrav", consumes = {MediaType.APPLICATION_JSON_VALUE})
+	@PostMapping(path = "/refusjonskrav")
 	public ResponseEntity<String> lagreRefusjonskrav( @RequestParam(defaultValue = "202") String org_id,
 										@Valid @RequestBody String message) {
 
