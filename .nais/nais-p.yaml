@@ -32,17 +32,15 @@ spec:
       enabled: true
       allowAllUsers: true
       tenant: nav.no
+
   accessPolicy:
     inbound:
       rules:
-         - application: oebs-valp-api
-           namespace: team-oebs
-           cluster: prod-fss
-    outbound:
-      external:
-        - host: nav.eye-share.com
-        - host: nav.vieri.no
-        - host: vieri-api-prod.developer.azure-api.net
+        - application: oebs-fullmakt-prod
+        - application: tiltaksokonomi
+          namespace: team-mulighetsrommet
+          cluster: prod-gcp
+
 
   prometheus:
     enabled: true

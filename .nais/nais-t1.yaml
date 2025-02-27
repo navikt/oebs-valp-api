@@ -35,7 +35,7 @@ spec:
   accessPolicy:
     inbound:
       rules:
-        - application: oebs-fullmakt-godkjenning-api
+        - application: oebs-fullmakt-dev
         - application: tiltaksokonomi
           namespace: team-mulighetsrommet
           cluster: dev-gcp

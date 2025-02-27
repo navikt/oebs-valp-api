@@ -32,12 +32,14 @@ spec:
       enabled: true
       allowAllUsers: true
       tenant: trygdeetaten.no
-  #accessPolicy:
-  #  inbound:
-  #    rules:
-  #       - application: oebs-api-ve-q1
-  #         namespace: team-oebs
-  #         cluster: dev-fss
+      
+  accessPolicy:
+    inbound:
+      rules:
+        - application: oebs-fullmakt-dev
+        - application: tiltaksokonomi
+          namespace: team-mulighetsrommet
+          cluster: dev-gcp
 
   prometheus:
     enabled: true
