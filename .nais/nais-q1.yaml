@@ -1,7 +1,7 @@
 apiVersion: nais.io/v1alpha1
 kind: Application
 metadata:
-  name: oebs-valp-api-q1
+  name: oebs-po-ap-api-q1
   namespace: team-oebs
   labels:
     team: team-oebs
@@ -47,9 +47,9 @@ spec:
   vault:
     enabled: true
     paths:
-      - kvPath: "kv/preprod/fss/oebs-valp-api-q1/team-oebs"
+      - kvPath: "kv/preprod/fss/oebs-po-ap-api-q1/team-oebs"
         mountPath: "/var/run/secrets/nais.io/vault"
 
   ingresses:
-     - "https://oebs-valp-api-q1.intern.dev.nav.no"
-     - "https://oebs-valp-api-q1.dev-fss-pub.nais.io"
+    - "https://oebs-po-ap-api-q1.intern.dev.nav.no"
+    - "https://oebs-po-ap-api-q1.dev-fss-pub.nais.io"
