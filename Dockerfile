@@ -1,5 +1,6 @@
 # FROM gcr.io/distroless/java21
 FROM eclipse-temurin:23-jre-alpine
+RUN apk add --no-cache curl
 
 WORKDIR /app
 
