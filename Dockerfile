@@ -1,5 +1,5 @@
-# FROM ghcr.io/navikt/baseimages/temurin:21
-FROM gcr.io/distroless/java21
+# FROM gcr.io/distroless/java21
+FROM eclipse-temurin:23-jre-alpine
 
 WORKDIR /app
 
