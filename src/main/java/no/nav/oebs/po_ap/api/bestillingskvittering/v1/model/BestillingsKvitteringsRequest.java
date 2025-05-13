@@ -1,4 +1,4 @@
-package no.nav.oebs.po_ap.api.fakturainfo.v1.model;
+package no.nav.oebs.po_ap.api.bestillingskvittering.v1.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -12,7 +12,7 @@ import lombok.*;
 @ToString
 @JsonInclude(Include.NON_NULL)
 @JsonPropertyOrder({ "org_id", "po_number" })
-public class FakturaInfoRequest {
+public class BestillingsKvitteringsRequest {
 
     private Integer org_id;
 

@@ -127,6 +127,7 @@ public class PlsqlProcedureRepository {
 		return new PlsqlProcedureResult(dataOut, messageNumber, message);
 	}
 
+	/*
 	private void logProcedureCall(String procedureName, String dataIn, PlsqlProcedureResult result, long executionTime,
 			Exception exception) {
 
@@ -165,4 +166,5 @@ public class PlsqlProcedureRepository {
 			log.error("Feil ved logging av kalloggdata til databasen; feilmelding=" + e.getMessage(), e);
 		}
 	}
+	*/
 }

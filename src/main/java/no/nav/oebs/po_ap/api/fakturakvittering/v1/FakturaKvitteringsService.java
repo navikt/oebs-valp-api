@@ -1,8 +1,8 @@
-package no.nav.oebs.po_ap.api.fakturainfo.v1;
+package no.nav.oebs.po_ap.api.fakturakvittering.v1;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import no.nav.oebs.po_ap.api.fakturainfo.v1.model.FakturaInfoRequest;
+import no.nav.oebs.po_ap.api.fakturakvittering.v1.model.FakturaInfoRequest;
 import no.nav.oebs.po_ap.api.common.utils.ObjektMaps;
 import no.nav.oebs.po_ap.db.repository.PlsqlProcedureRepository;
 import no.nav.oebs.po_ap.db.repository.PlsqlProcedureResult;
@@ -12,13 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @Transactional(noRollbackFor = { Exception.class })
-public class FakturaInfoService extends ObjektMaps {
+public class FakturaKvitteringsService extends ObjektMaps {
 
 	private static final String PLSQL_PROCEDURE = "xxrtv_po_ap_api_pkg.xxrtv_fakturainfo";
 
 	private final PlsqlProcedureRepository plsqlProcedureRepository;
 
-	public FakturaInfoService(PlsqlProcedureRepository plsqlProcedureRepository, ObjectMapper objectMapper) {
+	public FakturaKvitteringsService(PlsqlProcedureRepository plsqlProcedureRepository, ObjectMapper objectMapper) {
 		super(objectMapper);
 		this.plsqlProcedureRepository = plsqlProcedureRepository;
 	}

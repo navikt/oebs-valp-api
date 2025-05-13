@@ -1,11 +1,9 @@
-package no.nav.oebs.po_ap.api.common.model;
+package no.nav.oebs.po_ap.api.fakturakvittering.v1.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.*;
-
-import java.time.LocalDate;
 
 @Builder
 @NoArgsConstructor
@@ -13,15 +11,10 @@ import java.time.LocalDate;
 @Getter
 @ToString
 @JsonInclude(Include.NON_NULL)
-@JsonPropertyOrder({ "org_id", "segmentname", "segmentverdi", "lastupdatedate" })
-public class KontRequest {
+@JsonPropertyOrder({ "org_id", "po_number" })
+public class FakturaInfoRequest {
 
     private Integer org_id;
 
-    private String segmentname;
-
-    private String segmentverdi;
-
-    private LocalDate lastupdatedate;
+    private String po_number;
 }
-

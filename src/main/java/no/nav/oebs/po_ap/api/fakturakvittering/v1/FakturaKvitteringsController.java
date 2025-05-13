@@ -1,4 +1,4 @@
-package no.nav.oebs.po_ap.api.fakturainfo.v1;
+package no.nav.oebs.po_ap.api.fakturakvittering.v1;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,19 +19,19 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @RequestMapping(path = "/api/v1")
 @Tag(name = SwaggerConfig.PO_AP)
-public class FakturaInfoController {
+public class FakturaKvitteringsController {
 
 	private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
-	private final FakturaInfoService service;
+	private final FakturaKvitteringsService service;
 
-	public FakturaInfoController(FakturaInfoService service) {
+	public FakturaKvitteringsController(FakturaKvitteringsService service) {
 		this.service = service;
 	}
 
 	@Protected
 	@PoApSwagger
-	@GetMapping(path = "/fakturainfo", produces = MediaType.TEXT_PLAIN_VALUE + ";charset=UTF-8") //APPLICATION_JSON_VALUE + ";charset=UTF-8")
+	@GetMapping(path = "/fakturakvittering", produces = MediaType.TEXT_PLAIN_VALUE + ";charset=UTF-8") //APPLICATION_JSON_VALUE + ";charset=UTF-8")
 	public String finnRefusjonskravtransaksjoner(
 			@RequestParam(name = "org_id", defaultValue = "202") Integer org_id,
 			@RequestParam(name = "po_number") @Parameter(description = "f.eks. 3170085") String po_number)
