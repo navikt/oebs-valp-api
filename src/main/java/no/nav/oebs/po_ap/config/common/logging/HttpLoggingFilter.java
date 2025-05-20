@@ -16,7 +16,6 @@ import jakarta.validation.constraints.NotNull;
 import no.nav.oebs.po_ap.config.common.mdc.MdcOperations;
 import no.nav.oebs.po_ap.db.entity.KallLogg;
 import no.nav.oebs.po_ap.db.repository.KallLoggRepository;
-//import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.filter.OncePerRequestFilter;
