@@ -95,6 +95,7 @@ public class PostMeldingService {
                                     response.getBody());
 
                             isError.set(statusCode.is4xxClientError() || statusCode.is5xxServerError());
+
                             skrivLogg(System.currentTimeMillis() - startTime, jsonPayLoad,
                                     isError.get() ? new Exception() : null);
 
@@ -102,15 +103,17 @@ public class PostMeldingService {
                                 logger.info("statusCode: {}", statusCode);
 
                                 throw new RuntimeException(statusCode + " occurred");
+                            } else {
+                                // Oppdater status i database
+                                oppdaterBestillingService.updateKvitteringStatus(jsonPayLoad);
                             }
                         })
                         .body(String.class);
-
             }
             else {
                 STATUS = "TOM";
-                skrivLogg(System.currentTimeMillis() - startTime, jsonPayLoad,
-                        isError.get() ? new Exception() : null);
+                /*skrivLogg(System.currentTimeMillis() - startTime, jsonPayLoad,
+                        isError.get() ? new Exception() : null);*/
             }
 
         } catch (Exception e) {
@@ -120,7 +123,7 @@ public class PostMeldingService {
     }
 
     private String getStatusTypeDescription(HttpStatusCode statusCode, String jsonString) {
-        if (statusCode.is2xxSuccessful()) {
+        /*if (statusCode.is2xxSuccessful()) {
             try {
                 oppdaterBestillingService.updateKvitteringStatus(jsonString);
                 return "Status endret i database";
@@ -129,7 +132,8 @@ public class PostMeldingService {
                 throw new RuntimeException("Kunne ikke oppdatere status i database", e);
             }
 
-        } else if (statusCode.is4xxClientError()) {
+        } else*/
+        if (statusCode.is4xxClientError()) {
             return "Client error";
         } else if (statusCode.is5xxServerError()) {
             return "Server error";
@@ -152,7 +156,7 @@ public class PostMeldingService {
                             ? PlsqlMessageCodes.EXCEPTION //
                             : 200) //
                     .kalltid(executionTime) //
-                    .request("Skedulert jobb") //
+                    .request("SKEDULERT /api/v1/bestillingskvittering") //
                     .response(jsonPayLoad) //
                     .logginfo(exception != null //
                             ? LoggingUtils.formatExceptionAsString(exception) //

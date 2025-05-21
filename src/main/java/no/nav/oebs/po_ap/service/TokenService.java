@@ -43,7 +43,7 @@ public class TokenService {
     public String fetchToken(String identityProvider, String target) {
         if (cachedToken != null && tokenExpiresAt != null &&
                 Instant.now().isBefore(tokenExpiresAt)) {
-            logger.info("Returnerer bufret token");
+
             return cachedToken;
         }
 
@@ -51,8 +51,6 @@ public class TokenService {
                 "identity_provider", identityProvider,
                 "target", target
         );
-
-        logger.info("Ber om nytt token...");
 
         TokenResponse response; // = null;
         try {
@@ -62,15 +60,12 @@ public class TokenService {
                     .retrieve()
                     .body(TokenResponse.class);
         } catch (Exception e) {
-            logger.error("Ingen token returnert: {}", e.getMessage());
-            throw new SuppressedStackTraceException("An error occurred: " + e.getMessage());
+            throw new SuppressedStackTraceException("Feil token: " + e.getMessage());
         }
 
         assert response != null;
         cachedToken = response.getAccessToken();
         tokenExpiresAt = Instant.now().plusSeconds(response.getExpiresIn() - 30); // 30s buffer
-
-        logger.info("Token mottatt og bufret, utløper kl {}", tokenExpiresAt);
 
         return cachedToken;
     }

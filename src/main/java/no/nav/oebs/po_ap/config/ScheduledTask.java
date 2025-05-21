@@ -1,6 +1,7 @@
 package no.nav.oebs.po_ap.config;
 
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
+import no.nav.oebs.po_ap.service.OppdaterBestillingService;
 import no.nav.oebs.po_ap.service.PostMeldingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,19 +21,20 @@ public class ScheduledTask {
     @Autowired
     PostMeldingService postMeldingService;
 
+    @Autowired
+    OppdaterBestillingService oppdaterBestillingService;
+
     @Value("${scheduled.time}")
     private String scheduledTime;
 
     @Scheduled(cron = "${scheduled.time}")
-    // @Scheduled(cron = "0 */3 * * * *")
+    //@Scheduled(cron = "0 */3 * * * *")
     @SchedulerLock(
             name = "scheduledTask_process",
-            lockAtLeastFor = "5m",
-            lockAtMostFor = "15m"
+            lockAtLeastFor = "2m",
+            lockAtMostFor = "5m"
     )
     public void process() {
-
-        logger.info("Starter planlagt oppgave - Dette skal kun kjøres én gang på tvers av alle noder");
 
         try {
             postMeldingService.postmelding();
@@ -40,17 +42,14 @@ public class ScheduledTask {
             // Vent i 5 sekunder ..
             if (Objects.equals(postMeldingService.STATUS, "OK")) {
                 Thread.sleep(5000);
-                logger.info("Overføring av bestillingskvitteringer er fullført");
-            } else {
-                logger.info("Ingen data funnet");
+                logger.info("Antall kvitteringer overført: {} ", oppdaterBestillingService.ANTALL);
             }
+
         } catch (InterruptedException e) {
-            // Restore the interrupted status
             Thread.currentThread().interrupt();
-            logger.error("Overføring av bestillingskvitteringer avbrutt", e);
+            logger.error("Overføring kvitteringer avbrutt ..", e);
         } catch (Exception e) {
-            // Catch other exceptions to prevent scheduled task from failing silently
-            logger.error("Overføring av bestillingskvitteringer har feilet", e);
+            logger.error("Overføring av kvitteringer har feilet ..", e);
         }
     }
 }

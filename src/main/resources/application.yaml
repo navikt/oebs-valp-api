@@ -27,9 +27,6 @@ springdoc:
     disable-swagger-default-url: true
     tags-sorter: alpha
 
-shedlock:
-  table-name: xxrtv_shedlock
-
 nais-token-endpoint: ${NAIS_TOKEN_ENDPOINT}
 
 # logging:

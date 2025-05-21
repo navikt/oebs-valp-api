@@ -18,6 +18,7 @@ public class ShedLockConfig {
                 JdbcTemplateLockProvider.Configuration.builder()
                         .withJdbcTemplate(new JdbcTemplate(dataSource))
                         .usingDbTime() // Use DB time to avoid clock skew
+                        .withTableName("xxrtv_shedlock")
                         .build()
         );
     }
