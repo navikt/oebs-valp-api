@@ -100,7 +100,7 @@ public class PostMeldingService {
                             } else {
                                 // Oppdater status i database
                                 int antallKvitt = oppdaterBestillingService.updateKvitteringStatus(jsonPayLoad);
-                                logger.info("Antall Kvitteringer overført: {}", antallKvitt);
+                                logger.info("Antall kvitteringer overført: {}", antallKvitt);
                             }
                         })
                         .body(String.class);
