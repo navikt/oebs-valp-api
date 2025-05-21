@@ -42,7 +42,7 @@ public class ScheduledTask {
             // Vent i 5 sekunder ..
             if (Objects.equals(postMeldingService.STATUS, "OK")) {
                 Thread.sleep(5000);
-                logger.info("Antall kvitteringer overført: {} ", oppdaterBestillingService.ANTALL);
+                // logger.info("Antall kvitteringer overført: {} ", oppdaterBestillingService.ANTALL);
             }
 
         } catch (InterruptedException e) {

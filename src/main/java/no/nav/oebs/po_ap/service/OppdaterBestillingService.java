@@ -20,22 +20,19 @@ import java.util.List;
         private final ObjectMapper objectMapper;
         private final Logger logger = LoggerFactory.getLogger(TokenService.class);
 
-        public int ANTALL = 0 ;
-
         public OppdaterBestillingService(BestillingRepository repository, ObjectMapper objectMapper) {
             this.repository = repository;
             this.objectMapper = objectMapper;
         }
 
         @Transactional
-        public void updateKvitteringStatus(String jsonString) throws IOException {
+        public int updateKvitteringStatus(String jsonString) throws IOException {
             List<BestillingDto> bestillinger = objectMapper.readValue(jsonString, new TypeReference<List<BestillingDto>>() {});
 
             for (BestillingDto bestilling : bestillinger) {
                 repository.updateKvitteringStatus(bestilling.getBestillingsNummer());
             }
 
-            ANTALL = bestillinger.size();
-
+            return bestillinger.size();
     }
 }

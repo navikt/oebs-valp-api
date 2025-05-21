@@ -99,7 +99,8 @@ public class PostMeldingService {
                                 throw new RuntimeException(statusCode + " occurred");
                             } else {
                                 // Oppdater status i database
-                                oppdaterBestillingService.updateKvitteringStatus(jsonPayLoad);
+                                int antallKvitt = oppdaterBestillingService.updateKvitteringStatus(jsonPayLoad);
+                                logger.info("Antall Kvitteringer overført: {}", antallKvitt);
                             }
                         })
                         .body(String.class);
@@ -115,24 +116,6 @@ public class PostMeldingService {
             throw new RuntimeException("Kunne ikke sende forespørselen", e);
         }
     }
-
-    /*private String getStatusTypeDescription(HttpStatusCode statusCode, String jsonString) {
-        *//*if (statusCode.is2xxSuccessful()) {
-            try {
-                oppdaterBestillingService.updateKvitteringStatus(jsonString);
-                return "Status endret i database";
-            } catch (Exception e) {
-                logger.error(e.getMessage(), e);
-                throw new RuntimeException("Kunne ikke oppdatere status i database", e);
-            }
-
-        } else*//*
-        if (statusCode.is4xxClientError()) {
-            return "Client error";
-        } else if (statusCode.is5xxServerError()) {
-            return "Server error";
-        }
-    }*/
 
     private void skrivLogg(long executionTime, String jsonPayLoad, Exception exception ) {
 
