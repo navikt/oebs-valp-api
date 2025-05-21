@@ -87,12 +87,6 @@ public class PostMeldingService {
                         .retrieve()
                         .onStatus(httpStatus -> true, (request, response) -> {
                             HttpStatusCode statusCode = response.getStatusCode();
-                            String statusType = getStatusTypeDescription(statusCode, jsonPayLoad);
-
-                            logger.error("{} response: Status {}, Body: {}",
-                                    statusType,
-                                    statusCode,
-                                    response.getBody());
 
                             isError.set(statusCode.is4xxClientError() || statusCode.is5xxServerError());
 
@@ -122,8 +116,8 @@ public class PostMeldingService {
         }
     }
 
-    private String getStatusTypeDescription(HttpStatusCode statusCode, String jsonString) {
-        /*if (statusCode.is2xxSuccessful()) {
+    /*private String getStatusTypeDescription(HttpStatusCode statusCode, String jsonString) {
+        *//*if (statusCode.is2xxSuccessful()) {
             try {
                 oppdaterBestillingService.updateKvitteringStatus(jsonString);
                 return "Status endret i database";
@@ -132,15 +126,13 @@ public class PostMeldingService {
                 throw new RuntimeException("Kunne ikke oppdatere status i database", e);
             }
 
-        } else*/
+        } else*//*
         if (statusCode.is4xxClientError()) {
             return "Client error";
         } else if (statusCode.is5xxServerError()) {
             return "Server error";
-        } else {
-            return "Unknown error";
         }
-    }
+    }*/
 
     private void skrivLogg(long executionTime, String jsonPayLoad, Exception exception ) {
 

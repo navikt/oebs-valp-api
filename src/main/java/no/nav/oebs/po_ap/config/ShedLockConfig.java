@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.sql.DataSource;
+import java.util.TimeZone;
 
 @Configuration
 public class ShedLockConfig {
@@ -17,8 +18,9 @@ public class ShedLockConfig {
         return new JdbcTemplateLockProvider(
                 JdbcTemplateLockProvider.Configuration.builder()
                         .withJdbcTemplate(new JdbcTemplate(dataSource))
-                        .usingDbTime() // Use DB time to avoid clock skew
+                        // .usingDbTime() // Use DB time to avoid clock skew
                         .withTableName("xxrtv_shedlock")
+                        .withTimeZone(TimeZone.getTimeZone("Europe/Oslo"))
                         .build()
         );
     }
