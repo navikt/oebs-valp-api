@@ -41,7 +41,13 @@ spec:
         - application: tiltaksokonomi
           namespace: team-mulighetsrommet
           cluster: prod-gcp
-
+    outbound:
+      external:
+        - host: mulighetsrommet-tiltaksokonomi.intern.nav.no
+      rules:
+        - application: tiltaksokonomi
+          namespace: team-mulighetsrommet
+          cluster: prod-gcp
 
   prometheus:
     enabled: true
