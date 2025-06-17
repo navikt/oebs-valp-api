@@ -24,7 +24,7 @@ spec:
     timeout: 10
   resources:
     requests:
-      cpu: 120m
+      cpu: 20m
       memory: 416Mi
     limits:
       memory: 512Mi
@@ -37,6 +37,13 @@ spec:
     inbound:
       rules:
         - application: oebs-fullmakt-dev
+        - application: tiltaksokonomi
+          namespace: team-mulighetsrommet
+          cluster: dev-gcp
+    outbound:
+      external:
+        - host: mulighetsrommet-tiltaksokonomi.intern.dev.nav.no
+      rules:
         - application: tiltaksokonomi
           namespace: team-mulighetsrommet
           cluster: dev-gcp
