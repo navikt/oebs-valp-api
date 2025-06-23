@@ -8,11 +8,9 @@ import lombok.Setter;
 @Setter
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class BestillingDto {
-
+public class FakturaDto {
     // Getters and setters
-    @JsonProperty("bestillingsNummer")
-    private String bestillingsNummer;
+    @JsonProperty("fakturaNummer")
+    private String fakturaNummer;
 
 }
-

@@ -11,10 +11,10 @@ import lombok.*;
 @Getter
 @ToString
 @JsonInclude(Include.NON_NULL)
-@JsonPropertyOrder({ "org_id", "po_number" })
+@JsonPropertyOrder({ "org_id", "faktura_num" })
 public class FakturaInfoRequest {
 
     private Integer org_id;
 
-    private String po_number;
+    private String faktura_num;
 }

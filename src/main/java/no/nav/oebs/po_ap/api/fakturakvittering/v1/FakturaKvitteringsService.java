@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(noRollbackFor = { Exception.class })
 public class FakturaKvitteringsService extends ObjektMaps {
 
-	private static final String PLSQL_PROCEDURE = "xxrtv_po_ap_api_pkg.xxrtv_fakturainfo";
+	private static final String PLSQL_PROCEDURE = "xxrtv_po_ap_api_pkg.xxrtv_fakturakvittering";
 
 	private final PlsqlProcedureRepository plsqlProcedureRepository;
 
@@ -26,7 +26,7 @@ public class FakturaKvitteringsService extends ObjektMaps {
 	private FakturaInfoRequest buildRequest(Integer org_id, String po_number) {
 		return FakturaInfoRequest.builder() //
 				.org_id(org_id) //
-				.po_number(po_number) //
+				.faktura_num(po_number) //
 				.build();
 	}
 

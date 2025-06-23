@@ -1,7 +1,7 @@
 package no.nav.oebs.po_ap.service;
 
 import jakarta.annotation.PostConstruct;
-import no.nav.oebs.po_ap.api.bestillingskvittering.v1.BestillingsKvitteringsService;
+import no.nav.oebs.po_ap.api.fakturakvittering.v1.FakturaKvitteringsService;
 import no.nav.oebs.po_ap.config.common.logging.LoggingUtils;
 import no.nav.oebs.po_ap.config.common.mdc.MdcOperations;
 import no.nav.oebs.po_ap.db.entity.KallLogg;
@@ -11,22 +11,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
-import org.springframework.http.HttpHeaders;
+
 import java.time.LocalDateTime;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static no.nav.oebs.po_ap.config.common.mdc.MdcOperations.generateCorrelationId;
 
 @Service
-public class PostMeldingService {
-
+public class FakturaServiceSched {
     public String STATUS = "OK" ;
 
     @Autowired
-    private  OppdaterBestillingService oppdaterBestillingService;
+    private  OppdaterFakturaService oppdaterFakturaService;
 
     private RestClient restClient;
     private final Logger logger = LoggerFactory.getLogger(TokenService.class);
@@ -38,7 +38,7 @@ public class PostMeldingService {
     private TokenService tokenService;
 
     @Autowired
-    private BestillingsKvitteringsService service;
+    private FakturaKvitteringsService service;
 
     @Value("${faktura.endpoint.url}")
     private String fakturaEndpointUrl;
@@ -46,29 +46,31 @@ public class PostMeldingService {
     @Value("${base.url}")
     private String baseUrl;
 
-    @Value("${bestilling.endpoint.url}")
-    private String bestillingEndpointUrl;
-
     @Value("${identityProvider}")
     private String identityProvider;
 
     @Value("${target}")
     private String target;
 
-    private final static String procName = "/api/v1/bestillingskvittering";
+    private final static String procName = "/api/v1/fakturakvittering";
 
     @Autowired
     private KallLoggRepository kallLoggRepository;
 
     @PostConstruct
     public void init() {
+        /*  Timeout hvis det trengs ..
+            SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+            requestFactory.setConnectTimeout(60000); // 60 seconds
+            requestFactory.setReadTimeout(60000);   // 60 seconds
+        */
         this.restClient = RestClient.builder()
                 .baseUrl(baseUrl)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, "application/json")
                 .build();
     }
 
-    public void postmelding() {
+    public void sendFaktura() {
 
         long startTime = System.currentTimeMillis();
 
@@ -76,12 +78,12 @@ public class PostMeldingService {
 
         String bearerToken = tokenService.fetchToken(identityProvider, target);
 
-        String jsonPayLoad = service.finnBestillingsTransaksjoner(ORG_ID, PROCESSED);
+        String jsonPayLoad = service.finnFakturaTransaksjoner(ORG_ID, PROCESSED);
 
         try {
-            if (jsonPayLoad.contains("bestillingsNummer")) {
+            if (jsonPayLoad.contains("fakturaNummer")) {
                 restClient.post()
-                        .uri(bestillingEndpointUrl)
+                        .uri(fakturaEndpointUrl)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + bearerToken)
                         .body(jsonPayLoad)
                         .retrieve()
@@ -99,7 +101,7 @@ public class PostMeldingService {
                                 throw new RuntimeException(statusCode + " occurred");
                             } else {
                                 // Oppdater status i database
-                                int antallKvitt = oppdaterBestillingService.updateKvitteringStatus(jsonPayLoad);
+                                int antallKvitt = oppdaterFakturaService.updateKvitteringStatus(jsonPayLoad);
                                 logger.info("Antall kvitteringer overført: {}", antallKvitt);
                             }
                         })
@@ -126,12 +128,12 @@ public class PostMeldingService {
                     .type(KallLogg.TYPE_PLSQL) //
                     .kallRetning(KallLogg.RETNING_UT) //
                     .method(KallLogg.METHOD_POST) //
-                    .operation(PostMeldingService.procName) //
+                    .operation(FakturaServiceSched.procName) //
                     .status(exception != null //
                             ? PlsqlMessageCodes.EXCEPTION //
                             : 200) //
                     .kalltid(executionTime) //
-                    .request("SKEDULERT /api/v1/bestillingskvittering") //
+                    .request("SKEDULERT /api/v1/fakturakvittering") //
                     .response(jsonPayLoad) //
                     .logginfo(exception != null //
                             ? LoggingUtils.formatExceptionAsString(exception) //
@@ -140,7 +142,7 @@ public class PostMeldingService {
 
             saveKallLogg(kallLogg);
         }
-}
+    }
 
     public void saveKallLogg(KallLogg kallLogg) {
         try {

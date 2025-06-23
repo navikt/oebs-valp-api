@@ -1,33 +1,32 @@
 package no.nav.oebs.po_ap.config;
 
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
-import no.nav.oebs.po_ap.service.OppdaterBestillingService;
-import no.nav.oebs.po_ap.service.PostMeldingService;
+import no.nav.oebs.po_ap.service.FakturaServiceSched;
+import no.nav.oebs.po_ap.service.OppdaterFakturaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import no.nav.oebs.po_ap.config.SwaggerConfig;
 
 import java.util.Objects;
 
 @Component
-public class ScheduledTask {
+public class ScheduledTaskFaktura {
 
-    private static final Logger logger = LoggerFactory.getLogger(ScheduledTask.class);
-
-    @Autowired
-    PostMeldingService postMeldingService;
+    private static final Logger logger = LoggerFactory.getLogger(ScheduledTaskFaktura.class);
 
     @Autowired
-    OppdaterBestillingService oppdaterBestillingService;
+    FakturaServiceSched fakturaServiceSched;
 
-    @Value("${scheduled.time}")
+    @Autowired
+    OppdaterFakturaService oppdaterFakturaService;
+
+    @Value("${scheduled.time.faktura}")
     private String scheduledTime;
 
-    @Scheduled(cron = "${scheduled.time}")
+    @Scheduled(cron = "${scheduled.time.faktura}")
     //@Scheduled(cron = "0 */3 * * * *")
     @SchedulerLock(
             name = "scheduledTask_process",
@@ -37,10 +36,10 @@ public class ScheduledTask {
     public void process() {
 
         try {
-            postMeldingService.postmelding();
+            fakturaServiceSched.sendFaktura();
 
             // Vent i 5 sekunder ..
-            if (Objects.equals(postMeldingService.STATUS, "OK")) {
+            if (Objects.equals(fakturaServiceSched.STATUS, "OK")) {
                 Thread.sleep(5000);
                 // logger.info("Antall kvitteringer overført: {} ", oppdaterBestillingService.ANTALL);
             }
