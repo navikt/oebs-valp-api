@@ -48,7 +48,7 @@ public class ScheduledTaskFaktura {
             Thread.currentThread().interrupt();
             logger.error("Overføring kvitteringer avbrutt ..", e);
         } catch (Exception e) {
-            logger.error("Overføring av kvitteringer har feilet ..", e);
+            logger.error("Overføring av fakturakvitteringer har feilet ..", e);
         }
     }
 }

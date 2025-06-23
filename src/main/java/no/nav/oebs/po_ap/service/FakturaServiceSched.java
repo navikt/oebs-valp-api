@@ -23,13 +23,14 @@ import static no.nav.oebs.po_ap.config.common.mdc.MdcOperations.generateCorrelat
 
 @Service
 public class FakturaServiceSched {
+
     public String STATUS = "OK" ;
 
     @Autowired
     private  OppdaterFakturaService oppdaterFakturaService;
 
     private RestClient restClient;
-    private final Logger logger = LoggerFactory.getLogger(TokenService.class);
+    private final Logger logger = LoggerFactory.getLogger(FakturaServiceSched.class);
 
     private static final String PROCESSED = "PROCESSED";
     private static final Integer ORG_ID = 202;
@@ -59,11 +60,6 @@ public class FakturaServiceSched {
 
     @PostConstruct
     public void init() {
-        /*  Timeout hvis det trengs ..
-            SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-            requestFactory.setConnectTimeout(60000); // 60 seconds
-            requestFactory.setReadTimeout(60000);   // 60 seconds
-        */
         this.restClient = RestClient.builder()
                 .baseUrl(baseUrl)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, "application/json")

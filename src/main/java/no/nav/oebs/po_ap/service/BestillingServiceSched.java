@@ -30,7 +30,7 @@ public class BestillingServiceSched {
     private  OppdaterBestillingService oppdaterBestillingService;
 
     private RestClient restClient;
-    private final Logger logger = LoggerFactory.getLogger(TokenService.class);
+    private final Logger logger = LoggerFactory.getLogger(BestillingServiceSched.class);
 
     private static final String PROCESSED = "PROCESSED";
     private static final Integer ORG_ID = 202;
@@ -40,9 +40,6 @@ public class BestillingServiceSched {
 
     @Autowired
     private BestillingsKvitteringsService service;
-
-    @Value("${faktura.endpoint.url}")
-    private String fakturaEndpointUrl;
 
     @Value("${base.url}")
     private String baseUrl;
@@ -63,11 +60,6 @@ public class BestillingServiceSched {
 
     @PostConstruct
     public void init() {
-        /*  Timeout hvis det trengs ..
-            SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-            requestFactory.setConnectTimeout(60000); // 60 seconds
-            requestFactory.setReadTimeout(60000);   // 60 seconds
-        */
         this.restClient = RestClient.builder()
                 .baseUrl(baseUrl)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, "application/json")
@@ -96,8 +88,8 @@ public class BestillingServiceSched {
 
                             isError.set(statusCode.is4xxClientError() || statusCode.is5xxServerError());
 
-                            skrivLogg(System.currentTimeMillis() - startTime, jsonPayLoad,
-                                    isError.get() ? new Exception() : null);
+                            skrivLogg(System.currentTimeMillis() - startTime, jsonPayLoad, null);
+                                    // isError.get() ? new Exception() : null);
 
                             if (isError.get()) {
                                 logger.info("statusCode: {}", statusCode);
