@@ -29,7 +29,7 @@ public class ScheduledTaskBestilling {
     @Scheduled(cron = "${scheduled.time.bestilling}")
     // @Scheduled(cron = "0 */3 * * * *")
     @SchedulerLock(
-            name = "scheduledTask_process",
+            name = "scheduledTaskBestilling_process",
             lockAtLeastFor = "2m",
             lockAtMostFor = "5m"
     )

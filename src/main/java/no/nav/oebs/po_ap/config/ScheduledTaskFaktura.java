@@ -29,7 +29,7 @@ public class ScheduledTaskFaktura {
     @Scheduled(cron = "${scheduled.time.faktura}")
     //@Scheduled(cron = "0 */3 * * * *")
     @SchedulerLock(
-            name = "scheduledTask_process",
+            name = "scheduledTaskFaktura_process",
             lockAtLeastFor = "2m",
             lockAtMostFor = "5m"
     )
