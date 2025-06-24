@@ -76,6 +76,9 @@ public class BestillingServiceSched {
 
         String jsonPayLoad = service.finnBestillingsTransaksjoner(ORG_ID, PROCESSED);
 
+        logger.info("BestillingsEndpointUrl: {}", bestillingEndpointUrl);
+        logger.info("Bearer: {}", bearerToken.substring(5));
+        logger.info("Json: {}", jsonPayLoad.substring(5));
         try {
             if (jsonPayLoad.contains("bestillingsNummer")) {
                 restClient.post()
