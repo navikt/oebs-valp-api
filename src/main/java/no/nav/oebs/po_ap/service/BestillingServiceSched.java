@@ -88,11 +88,15 @@ public class BestillingServiceSched {
 
                             isError.set(statusCode.is4xxClientError() || statusCode.is5xxServerError());
 
-                            skrivLogg(System.currentTimeMillis() - startTime, jsonPayLoad, null);
-                                    // isError.get() ? new Exception() : null);
+                            skrivLogg(System.currentTimeMillis() - startTime, jsonPayLoad,
+                                    isError.get() ? new Exception() : null);
 
                             if (isError.get()) {
                                 logger.info("statusCode: {}", statusCode);
+                                logger.info("statusText: {}", response.getStatusText());
+                                logger.info("URI: {}", request.getURI());
+                                logger.info("Attributes: {}", request.getAttributes());
+                                logger.info("Method: {}", request.getMethod());
 
                                 throw new RuntimeException(statusCode + " occurred");
                             } else {
