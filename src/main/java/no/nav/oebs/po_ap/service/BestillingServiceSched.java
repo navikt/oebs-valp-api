@@ -76,9 +76,6 @@ public class BestillingServiceSched {
 
         String jsonPayLoad = service.finnBestillingsTransaksjoner(ORG_ID, PROCESSED);
 
-        logger.info("BestillingsEndpointUrl: {}", bestillingEndpointUrl);
-        logger.info("Bearer: {}", bearerToken.substring(5));
-        logger.info("Json: {}", jsonPayLoad.substring(5));
         try {
             if (jsonPayLoad.contains("bestillingsNummer")) {
                 restClient.post()
@@ -96,11 +93,6 @@ public class BestillingServiceSched {
 
                             if (isError.get()) {
                                 logger.info("statusCode: {}", statusCode);
-                                logger.info("statusText: {}", response.getStatusText());
-                                logger.info("URI: {}", request.getURI());
-                                logger.info("Attributes: {}", request.getAttributes());
-                                logger.info("Method: {}", request.getMethod());
-
                                 throw new RuntimeException(statusCode + " occurred");
                             } else {
                                 // Oppdater status i database
