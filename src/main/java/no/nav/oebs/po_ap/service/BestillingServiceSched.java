@@ -88,13 +88,33 @@ public class BestillingServiceSched {
 
                             isError.set(statusCode.is4xxClientError() || statusCode.is5xxServerError());
 
+                            // Get response body for better error context
+                            response.getBody();
+                            String responseBody = response.getBody().toString();
+
+                            // Create a proper exception with useful information
+                            Exception ex = new RuntimeException("HTTP " + statusCode +
+                                    " when calling " + bestillingEndpointUrl +
+                                    ". Response: " + responseBody);
+
                             skrivLogg(System.currentTimeMillis() - startTime, jsonPayLoad,
                                     isError.get() ? new Exception() : null);
 
                             if (isError.get()) {
+                                logger.error("Error calling endpoint. Status: {}, Response: {}",
+                                        statusCode, responseBody);
+                                try {
+                                    throw ex; // Throw the meaningful exception we created
+                                } catch (Exception e) {
+                                    throw new RuntimeException(e);
+                                }
+
+
+                            /*
+                            if (isError.get()) {
                                 logger.info("statusCode: {}", statusCode);
                                 throw new RuntimeException(statusCode + " occurred");
-                            } else {
+                            */} else {
                                 // Oppdater status i database
                                 int antallKvitt = oppdaterBestillingService.updateKvitteringStatus(jsonPayLoad);
                                 logger.info("Antall kvitteringer overført: {}", antallKvitt);
