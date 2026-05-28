@@ -3,14 +3,11 @@ package no.nav.oebs.po_ap.db.repository;
 import java.math.BigDecimal;
 import java.sql.Clob;
 import java.sql.Types;
-import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import javax.sql.DataSource;
 
-import no.nav.oebs.po_ap.config.common.mdc.MdcOperations;
-import no.nav.oebs.po_ap.exception.UgyldigInputException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SqlOutParameter;
@@ -22,68 +19,44 @@ import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
 
-import no.nav.oebs.po_ap.config.common.logging.LoggingUtils;
-import no.nav.oebs.po_ap.db.entity.KallLogg;
-import static no.nav.oebs.po_ap.config.common.mdc.MdcOperations.generateCorrelationId;
-
 
 @Slf4j
 @Repository
 public class PlsqlProcedureRepository {
 
 	// Generelle parameternavn; behøver ikke å matche hva som brukes i PL/SQL.
-	// private static final String ID_PARAM = "id";
 	private static final String DATA_IN_PARAM = "data_in";
 	private static final String DATA_OUT_PARAM = "data_out";
 	private static final String MESSAGE_NO_PARAM = "msg_no";
 	private static final String MESSAGE_PARAM = "msg";
 
-	private KallLoggRepository kallLoggRepository;
-
-	private JdbcTemplate jdbcTemplate;
-
-	private ConcurrentMap<String, SimpleJdbcCall> jdbcCallCache = new ConcurrentHashMap<>();
+	private final JdbcTemplate jdbcTemplate;
+	private final ConcurrentMap<String, SimpleJdbcCall> jdbcCallCache = new ConcurrentHashMap<>();
 
 	@Autowired
-	public PlsqlProcedureRepository(DataSource dataSource, KallLoggRepository kallLoggRepository) {
+	public PlsqlProcedureRepository(DataSource dataSource) {
 		jdbcTemplate = new JdbcTemplate(dataSource);
 		jdbcTemplate.setResultsMapCaseInsensitive(true);
-
-		this.kallLoggRepository = kallLoggRepository;
 	}
 
 	public PlsqlProcedureResult executeInOutProcedure(String procedureName, String dataIn) {
-		PlsqlProcedureResult result = null;
-		Exception exception = null;
-		long startTime = System.currentTimeMillis();
+		PlsqlProcedureResult result;
 
-		try {
+		validateProcedureName(procedureName);
 
-			validateProcedureName(procedureName);
+		SimpleJdbcCall jdbcCall = getJdbcCall(procedureName, //
+				new SqlParameter(DATA_IN_PARAM, Types.CLOB), //
+				new SqlOutParameter(DATA_OUT_PARAM, Types.CLOB), //
+				new SqlOutParameter(MESSAGE_NO_PARAM, Types.NUMERIC), //
+				new SqlOutParameter(MESSAGE_PARAM, Types.VARCHAR));
 
-			SimpleJdbcCall jdbcCall = getJdbcCall(procedureName, //
-					// new SqlParameter(ID_PARAM, Types.VARCHAR), //
-					new SqlParameter(DATA_IN_PARAM, Types.CLOB), //
-					new SqlOutParameter(DATA_OUT_PARAM, Types.CLOB), //
-					new SqlOutParameter(MESSAGE_NO_PARAM, Types.NUMERIC), //
-					new SqlOutParameter(MESSAGE_PARAM, Types.VARCHAR));
+		SqlParameterSource inParams = new MapSqlParameterSource() //
+				.addValue(DATA_IN_PARAM, dataIn);
 
-			SqlParameterSource inParams = new MapSqlParameterSource() //
-					// .addValue(ID_PARAM, MdcOperations.get(MdcOperations.MDC_CORRELATION_ID)) //
-					.addValue(DATA_IN_PARAM, dataIn);
+		result = executeProcedure(jdbcCall, inParams);
 
-			result = executeProcedure(jdbcCall, inParams);
+		return result;
 
-			return result;
-
-		} catch (Exception e) {
-			throw e;
-
-		} finally {
-			long endTime = System.currentTimeMillis();
-
-			// logProcedureCall(procedureName, dataIn, result, endTime - startTime, exception);
-		}
 	}
 
 	private void validateProcedureName(String procedureName) {
@@ -123,44 +96,4 @@ public class PlsqlProcedureRepository {
 		return new PlsqlProcedureResult(dataOut, messageNumber, message);
 	}
 
-	/*
-	private void logProcedureCall(String procedureName, String dataIn, PlsqlProcedureResult result, long executionTime,
-			Exception exception) {
-
-		String correlationId = MdcOperations.get(MdcOperations.MDC_CORRELATION_ID);
-
-		if (MdcOperations.get(MdcOperations.MDC_CORRELATION_ID) == null) {
-			KallLogg kallLogg = KallLogg.builder() //
-					.korrelasjonId(generateCorrelationId())
-					// .korrelasjonId(MdcOperations.get(MdcOperations.MDC_CORRELATION_ID)) //
-					.tidspunkt(LocalDateTime.now()) //
-					.type(KallLogg.TYPE_PLSQL) //
-					.kallRetning(KallLogg.RETNING_UT) //
-					.operation(procedureName) //
-					.status(exception != null //
-							? Integer.valueOf(PlsqlMessageCodes.EXCEPTION) //
-							: PlsqlProcedureResult.getMessageNumber(result)) //
-					.kalltid(executionTime) //
-					.request(dataIn) //
-					.response(result != null ? result.getData() : null) //
-					.logginfo(exception != null //
-							? LoggingUtils.formatExceptionAsString(exception) //
-							: PlsqlProcedureResult.getMessage(result)) //
-					.build();
-
-			log.debug("Correlation ID:  '" + correlationId + "'");
-
-			// if (correlationId == null)  {
-			   saveKallLogg(kallLogg);
-		}
-	}
-
-	private void saveKallLogg(KallLogg kallLogg) {
-		try {
-			kallLoggRepository.save(kallLogg);
-		} catch (Exception e) {
-			log.error("Feil ved logging av kalloggdata til databasen; feilmelding=" + e.getMessage(), e);
-		}
-	}
-	*/
 }

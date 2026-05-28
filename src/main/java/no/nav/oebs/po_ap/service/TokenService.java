@@ -2,8 +2,6 @@ package no.nav.oebs.po_ap.service;
 
 import jakarta.annotation.PostConstruct;
 import no.nav.oebs.po_ap.exception.SuppressedStackTraceException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -20,8 +18,6 @@ import java.net.URISyntaxException;
 public class TokenService {
 
     private RestClient restClient;
-    private final Logger logger = LoggerFactory.getLogger(TokenService.class);
-
     private String cachedToken;
     private Instant tokenExpiresAt;
 
