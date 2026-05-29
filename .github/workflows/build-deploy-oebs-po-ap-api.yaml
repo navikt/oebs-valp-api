@@ -38,14 +38,6 @@ jobs:
           identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }} # required, but is defined as an organization secret
           salsa: true
 
-      - name: Deploy to NAIS (T1)
-        if: startsWith(github.ref, 'refs/heads/dev/t1')
-        uses: nais/deploy/actions/deploy@v2
-        env:
-          CLUSTER: dev-fss
-          RESOURCE: .nais/nais-t1.yaml
-          IMAGE: ${{ steps.docker-push.outputs.image }}
-
       - name: Deploy to NAIS (Q1)
         if: startsWith(github.ref, 'refs/heads/dev/q1')
         uses: nais/deploy/actions/deploy@v2
