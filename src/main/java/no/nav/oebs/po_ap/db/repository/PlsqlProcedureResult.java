@@ -19,6 +19,12 @@ public class PlsqlProcedureResult {
 	private Integer messageNumber;
 	private String message;
 
+	public PlsqlProcedureResult(String data, Integer messageNumber, String message) {
+		this.data = data;
+		this.messageNumber = messageNumber != null ? messageNumber : Integer.valueOf(PlsqlMessageCodes.OK);
+		this.message = message;
+	}
+
 
 	public PlsqlProcedureResult(Clob clob, BigDecimal messageNumber, String message) {
 		try {
