@@ -20,14 +20,7 @@ public class ScheduledTaskBestilling {
     @Autowired
     BestillingServiceSched bestillingServiceSched;
 
-    @Autowired
-    OppdaterBestillingService oppdaterBestillingService;
-
-    @Value("${scheduled.time.bestilling}")
-    private String scheduledTime;
-
     @Scheduled(cron = "${scheduled.time.bestilling}")
-    // @Scheduled(cron = "0 */3 * * * *")
     @SchedulerLock(
             name = "scheduledTaskBestilling_process",
             lockAtLeastFor = "2m",

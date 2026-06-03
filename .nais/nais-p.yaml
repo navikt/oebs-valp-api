@@ -10,6 +10,8 @@ metadata:
 spec:
   image: {{ image }}
   port: 8080
+  envFrom:
+    - secret: oebs-po-ap-api
   replicas:
     min: 3
     max: 3
@@ -52,11 +54,6 @@ spec:
   prometheus:
     enabled: true
     path: /actuator/prometheus
-  vault:
-    enabled: true
-    paths:
-      - kvPath: "kv/prod/fss/oebs-po-ap-api/team-oebs"
-        mountPath: "/var/run/secrets/nais.io/vault"
 
   ingresses:
      - "https://oebs-po-ap-api.intern.nav.no"

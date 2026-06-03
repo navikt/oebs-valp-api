@@ -24,9 +24,6 @@ public class TokenService {
     @Value("${nais-token-endpoint}")
     private String naisTokenEndpoint;
 
-    @Value("${base.url}")
-    private String baseUrl;
-
     @PostConstruct
     public void init() throws URISyntaxException {
         String processedBaseUrl = getBaseUrl(naisTokenEndpoint); // Process the base URL

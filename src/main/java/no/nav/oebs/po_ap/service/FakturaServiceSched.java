@@ -41,16 +41,16 @@ public class FakturaServiceSched {
     @Autowired
     private FakturaKvitteringsService service;
 
-    @Value("${faktura.endpoint.url}")
+    @Value("${tiltaksokonomi.faktura.endpoint.url}")
     private String fakturaEndpointUrl;
 
-    @Value("${base.url}")
+    @Value("${tiltaksokonomi.base.url}")
     private String baseUrl;
 
-    @Value("${identityProvider}")
+    @Value("${token.identityProvider}")
     private String identityProvider;
 
-    @Value("${target}")
+    @Value("${token.target}")
     private String target;
 
     private final static String procName = "/api/v1/fakturakvittering";
