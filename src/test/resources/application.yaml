@@ -4,38 +4,34 @@ server:
 
 spring:
   application:
-    name: ${NAIS_APP_NAME}
-  profiles:
-     active: nais
+    name: oebs-po-ap-api
   datasource:
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-    url: ${DB_URL}
     driver-class-name: oracle.jdbc.OracleDriver
+    username: username
+    password: password
+    url: jdbc:oracle:thin:@//localhost:1521/placeholder
   jpa:
     hibernate:
       ddl-auto: none
+    properties:
+      hibernate:
+        temp:
+        use__jdbc_metadata_defaults: false
+        dialect: org.hibernate.dialect.OracleDialect
     show-sql: false
     open-in-view: false
 
-no.nav.security.jwt:
-  issuer:
-    azure:
-      accepted_audience: ${AZURE_APP_CLIENT_ID}
-      discoveryurl:  ${AZURE_APP_WELL_KNOWN_URL}
-      proxyurl: http://webproxy-nais.nav.no:8088
-
 oebs:
-  environment: ${OEBS_ENVIRONMENT}
+  environment: mock
   version: 1.0.0
   date: 01.06.2026
 
 token:
   identityProvider: azuread
-  target: ${TOKEN_TARGET}
+  target: api://dev-gcp.team-mulighetsrommet.tiltaksokonomi/.default
 
 tiltaksokonomi:
-  base.url: ${TILTAKOK_BASE_URL}
+  base.url: https://mulighetsrommet-tiltaksokonomi.intern.dev.nav.no
   faktura.endpoint.url: /api/v1/okonomi/kvittering/faktura
   bestilling.endpoint.url: /api/v1/okonomi/kvittering/bestilling
 
@@ -57,11 +53,4 @@ springdoc:
     disable-swagger-default-url: true
     tags-sorter: alpha
 
-nais-token-endpoint: ${NAIS_TOKEN_ENDPOINT}
-
-# logging:
-#  level:
-#    com.zaxxer.hikari: DEBUG
-#    root: warn
-#    org.springframework.web: debug
-#    org.hibernate: error
+nais-token-endpoint: empty

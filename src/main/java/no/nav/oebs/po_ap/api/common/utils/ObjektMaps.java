@@ -1,7 +1,6 @@
 package no.nav.oebs.po_ap.api.common.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import no.nav.oebs.po_ap.db.repository.PlsqlMessageCodes;
@@ -16,9 +15,6 @@ import no.nav.oebs.po_ap.exception.UgyldigInputException;
 public class ObjektMaps {
 
 	private ObjectMapper objectMapper;
-
-	protected ObjektMaps() {
-	}
 
 	protected ObjektMaps(ObjectMapper objectMapper) {
 		this.objectMapper = objectMapper;
@@ -47,26 +43,4 @@ public class ObjektMaps {
 		}
 	}
 
-	/**
-	 * Mapper fra JSON- til Java-objekt.
-	 */
-	protected <T> T toObject(String json, Class<T> valueType) {
-		try {
-			return objectMapper.readValue(json, valueType);
-		} catch (JsonProcessingException e) {
-			throw new JsonMappingException(e);
-		}
-	}
-
-	/**
-	 * Mapper fra JSON- til Java-objekt der generisk typeinformasjon må brukes under mappingen. Dette gjelder typisk for List-
-	 * og Map-objekter.
-	 */
-	protected <T> T toObject(String json, TypeReference<T> objectTypeRef) {
-		try {
-			return objectMapper.readValue(json, objectTypeRef);
-		} catch (JsonProcessingException e) {
-			throw new JsonMappingException(e);
-		}
-	}
 }

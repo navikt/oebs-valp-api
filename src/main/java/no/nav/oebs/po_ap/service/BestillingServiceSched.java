@@ -41,16 +41,16 @@ public class BestillingServiceSched {
     @Autowired
     private BestillingsKvitteringsService service;
 
-    @Value("${base.url}")
+    @Value("${tiltaksokonomi.base.url}")
     private String baseUrl;
 
-    @Value("${bestilling.endpoint.url}")
+    @Value("${tiltaksokonomi.bestilling.endpoint.url}")
     private String bestillingEndpointUrl;
 
-    @Value("${identityProvider}")
+    @Value("${token.identityProvider}")
     private String identityProvider;
 
-    @Value("${target}")
+    @Value("${token.target}")
     private String target;
 
     private final static String procName = "/api/v1/bestillingskvittering";

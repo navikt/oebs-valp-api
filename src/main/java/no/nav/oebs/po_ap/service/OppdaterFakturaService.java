@@ -4,8 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.oebs.po_ap.config.FakturaDto;
 import no.nav.oebs.po_ap.db.repository.FakturaRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +15,6 @@ public class OppdaterFakturaService {
 
     private final FakturaRepository repository;
     private final ObjectMapper objectMapper;
-    private final Logger logger = LoggerFactory.getLogger(TokenService.class);
 
     public OppdaterFakturaService(FakturaRepository repository, ObjectMapper objectMapper) {
         this.repository = repository;

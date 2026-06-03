@@ -17,10 +17,10 @@ public class TokenController {
 
     private final TokenService tokenService;
 
-    @Value("${identityProvider}")
+    @Value("${token.identityProvider}")
     private String identityProvider;
 
-    @Value("${target}")
+    @Value("${token.target}")
     private String target;
 
     public TokenController(TokenService tokenService) {
