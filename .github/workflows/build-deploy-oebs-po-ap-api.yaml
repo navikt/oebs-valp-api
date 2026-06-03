@@ -71,7 +71,7 @@ jobs:
         env:
           CLUSTER: dev-fss
           RESOURCE: .nais/nais-q1.yaml
-          VAR: image=${{ needs.build.outputs.image }}
+          VAR: image=${{ needs.build_and_push.outputs.image }}
 
   deploy-prod:
     name: Deploy to NAIS produksjon
@@ -89,4 +89,4 @@ jobs:
         env:
           CLUSTER: prod-fss
           RESOURCE: .nais/nais-p.yaml
-          VAR: image=${{ needs.build.outputs.image }}
+          VAR: image=${{ needs.build_and_push.outputs.image }}
