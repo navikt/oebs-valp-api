@@ -6,8 +6,6 @@ import no.nav.oebs.po_ap.api.common.utils.ObjektMaps;
 import no.nav.oebs.po_ap.api.bestillingskvittering.v1.model.BestillingsKvitteringsRequest;
 import no.nav.oebs.po_ap.db.repository.PlsqlProcedureRepository;
 import no.nav.oebs.po_ap.db.repository.PlsqlProcedureResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,8 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(noRollbackFor = { Exception.class })
 public class BestillingsKvitteringsService extends ObjektMaps {
-
-	private static final Logger logger = LoggerFactory.getLogger(BestillingsKvitteringsController.class);
 
 	private static final String PLSQL_PROCEDURE = "xxrtv_po_ap_api_pkg.xxrtv_bestillingskvittering";
 
