@@ -49,10 +49,10 @@ class FakturaServiceSchedTest {
     class SendFakturaTests {
 
         @Test
-        void sendFaktura_whenPayloadHarIngenFakturaer_setterStatusTom() {
+        void sendFaktura_whenPayloadHasNoFakturaer_setsStatusTom() {
             when(tokenService.fetchToken(anyString(), anyString())).thenReturn("token");
             when(fakturaKvitteringsService.finnFakturaTransaksjoner(anyInt(), anyString()))
-                    .thenReturn("ingen data her");
+                    .thenReturn("no data here");
 
             service.sendFaktura();
 
@@ -60,15 +60,15 @@ class FakturaServiceSchedTest {
         }
 
         @Test
-        void sendFaktura_whenTokenServiceThrows_kasterRuntimeException() {
+        void sendFaktura_whenTokenServiceThrows_throwsRuntimeException() {
             when(tokenService.fetchToken(anyString(), anyString()))
-                    .thenThrow(new RuntimeException("token feil"));
+                    .thenThrow(new RuntimeException("token error"));
 
             assertThrows(RuntimeException.class, () -> service.sendFaktura());
         }
 
         @Test
-        void sendFaktura_initialStatusErOk() {
+        void sendFaktura_initialStatusIsOk() {
             assertEquals("OK", service.STATUS);
         }
     }
@@ -77,15 +77,15 @@ class FakturaServiceSchedTest {
     class SaveKallLoggTests {
 
         @Test
-        void saveKallLogg_whenSaveKasterException_loggersOgKasterIkkeVidere() {
+        void saveKallLogg_whenSaveThrows_logsAndDoesNotRethrow() {
             KallLogg kallLogg = KallLogg.builder().korrelasjonId("korrId").build();
-            doThrow(new RuntimeException("db feil")).when(kallLoggRepository).save(any());
+            doThrow(new RuntimeException("db error")).when(kallLoggRepository).save(any());
 
             assertDoesNotThrow(() -> service.saveKallLogg(kallLogg));
         }
 
         @Test
-        void saveKallLogg_kasterRepositorySave() {
+        void saveKallLogg_callsRepositorySave() {
             KallLogg kallLogg = KallLogg.builder().korrelasjonId("korrId").build();
 
             service.saveKallLogg(kallLogg);

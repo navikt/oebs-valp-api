@@ -49,10 +49,10 @@ class BestillingServiceSchedTest {
     class SendBestillingTests {
 
         @Test
-        void sendBestilling_whenPayloadHarIngenBestillinger_setterStatusTom() {
+        void sendBestilling_whenPayloadHasNoBestillinger_setsStatusTom() {
             when(tokenService.fetchToken(anyString(), anyString())).thenReturn("token");
             when(bestillingsKvitteringsService.finnBestillingsTransaksjoner(anyInt(), anyString()))
-                    .thenReturn("ingen data her");
+                    .thenReturn("no data here");
 
             service.sendBestilling();
 
@@ -60,15 +60,15 @@ class BestillingServiceSchedTest {
         }
 
         @Test
-        void sendBestilling_whenTokenServiceThrows_kasterRuntimeException() {
+        void sendBestilling_whenTokenServiceThrows_throwsRuntimeException() {
             when(tokenService.fetchToken(anyString(), anyString()))
-                    .thenThrow(new RuntimeException("token feil"));
+                    .thenThrow(new RuntimeException("token error"));
 
             assertThrows(RuntimeException.class, () -> service.sendBestilling());
         }
 
         @Test
-        void sendBestilling_initialStatusErOk() {
+        void sendBestilling_initialStatusIsOk() {
             assertEquals("OK", service.STATUS);
         }
     }
@@ -77,15 +77,15 @@ class BestillingServiceSchedTest {
     class SaveKallLoggTests {
 
         @Test
-        void saveKallLogg_whenSaveKasterException_loggersOgKasterIkkeVidere() {
+        void saveKallLogg_whenSaveThrows_logsAndDoesNotRethrow() {
             KallLogg kallLogg = KallLogg.builder().korrelasjonId("korrId").build();
-            doThrow(new RuntimeException("db feil")).when(kallLoggRepository).save(any());
+            doThrow(new RuntimeException("db error")).when(kallLoggRepository).save(any());
 
             assertDoesNotThrow(() -> service.saveKallLogg(kallLogg));
         }
 
         @Test
-        void saveKallLogg_kasterRepositorysave() {
+        void saveKallLogg_callsRepositorySave() {
             KallLogg kallLogg = KallLogg.builder().korrelasjonId("korrId").build();
 
             service.saveKallLogg(kallLogg);
