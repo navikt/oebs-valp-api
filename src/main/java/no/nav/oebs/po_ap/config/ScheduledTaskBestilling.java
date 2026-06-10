@@ -1,12 +1,10 @@
 package no.nav.oebs.po_ap.config;
 
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
-import no.nav.oebs.po_ap.service.OppdaterBestillingService;
 import no.nav.oebs.po_ap.service.BestillingServiceSched;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -31,10 +29,8 @@ public class ScheduledTaskBestilling {
         try {
             bestillingServiceSched.sendBestilling();
 
-            // Vent i 5 sekunder ..
             if (Objects.equals(bestillingServiceSched.STATUS, "OK")) {
                 Thread.sleep(5000);
-                // logger.info("Antall kvitteringer overført: {} ", oppdaterBestillingService.ANTALL);
             }
 
         } catch (InterruptedException e) {

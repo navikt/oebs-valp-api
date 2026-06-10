@@ -19,8 +19,6 @@ import jakarta.validation.Valid;
 @Tag(name = SwaggerConfig.PO_AP, description = "Po-ap")
 public class FakturaController {
 
-	//private static final Logger logger = LoggerFactory.getLogger(Application.class);
-
 	private final FakturaService service;
 
 	public FakturaController(FakturaService service) {

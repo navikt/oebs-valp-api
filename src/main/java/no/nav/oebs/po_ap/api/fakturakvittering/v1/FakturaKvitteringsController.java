@@ -3,12 +3,9 @@ package no.nav.oebs.po_ap.api.fakturakvittering.v1;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
-import no.nav.oebs.po_ap.Application;
 import no.nav.oebs.po_ap.api.common.swagger.PoApSwagger;
 import no.nav.oebs.po_ap.config.SwaggerConfig;
 import no.nav.security.token.support.core.api.Protected;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +17,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = "/api/v1")
 @Tag(name = SwaggerConfig.PO_AP)
 public class FakturaKvitteringsController {
-
-	private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
 	private final FakturaKvitteringsService service;
 
@@ -37,7 +32,6 @@ public class FakturaKvitteringsController {
 			@RequestParam(name = "faktura_num") @Parameter(description = "f.eks. A-2025/11133-1") String faktura_num)
 	{
 
-		// return " Api'et er under utvikling ..";
 		return service.finnFakturaTransaksjoner(org_id, faktura_num);
 	}
 }
