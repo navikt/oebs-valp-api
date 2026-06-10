@@ -84,5 +84,52 @@ class ExceptionTest {
             assertInstanceOf(RuntimeException.class, ex);
         }
     }
+
+    @Nested
+    class SuppressedStackTraceExceptionTests {
+
+        @Test
+        void constructor_withMessage_storesMessage() {
+            var ex = new SuppressedStackTraceException("something went wrong");
+
+            assertEquals("something went wrong", ex.getMessage());
+        }
+
+        @Test
+        void constructor_withMessage_hasEmptyStackTrace() {
+            var ex = new SuppressedStackTraceException("error");
+
+            assertEquals(0, ex.getStackTrace().length);
+        }
+
+        @Test
+        void constructor_withMessageAndCause_storesBoth() {
+            Throwable cause = new RuntimeException("cause");
+
+            var ex = new SuppressedStackTraceException("error", cause);
+
+            assertEquals("error", ex.getMessage());
+            assertEquals(cause, ex.getCause());
+        }
+
+        @Test
+        void constructor_withMessageAndCause_hasEmptyStackTrace() {
+            var ex = new SuppressedStackTraceException("error", new RuntimeException());
+
+            assertEquals(0, ex.getStackTrace().length);
+        }
+
+        @Test
+        void fillInStackTrace_returnsSelf() {
+            var ex = new SuppressedStackTraceException("error");
+
+            assertSame(ex, ex.fillInStackTrace());
+        }
+
+        @Test
+        void isInstanceOfRuntimeException() {
+            assertInstanceOf(RuntimeException.class, new SuppressedStackTraceException("error"));
+        }
+    }
 }
 

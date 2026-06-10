@@ -31,7 +31,7 @@ class PlsqlProcedureRepositoryTest {
 
     @Test
     void executeInOutProcedure_withValidFormat_doesNotThrowOnValidation() {
-        // Validering passerer; kallet feiler på JDBC-nivå uten DB-tilkobling
+        // Validation passes; call fails at JDBC level without a DB connection
         assertThrows(Exception.class,
                 () -> repository.executeInOutProcedure("pakke.prosedyre", "{}"));
     }
