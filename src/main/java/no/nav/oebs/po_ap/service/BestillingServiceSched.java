@@ -17,7 +17,6 @@ import org.springframework.web.client.RestClient;
 import org.springframework.http.HttpHeaders;
 
 import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static no.nav.oebs.po_ap.config.common.mdc.MdcOperations.generateCorrelationId;
 
@@ -68,68 +67,38 @@ public class BestillingServiceSched {
 
     public void sendBestilling() {
 
+        STATUS = "OK";
         long startTime = System.currentTimeMillis();
 
-        AtomicBoolean isError = new AtomicBoolean(false);
-
         String bearerToken = tokenService.fetchToken(identityProvider, target);
-
         String jsonPayLoad = service.finnBestillingsTransaksjoner(ORG_ID, PROCESSED);
 
+        if (!jsonPayLoad.contains("bestillingsNummer")) {
+            STATUS = "TOM";
+            return;
+        }
+
         try {
-            if (jsonPayLoad.contains("bestillingsNummer")) {
-                restClient.post()
-                        .uri(bestillingEndpointUrl)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + bearerToken)
-                        .body(jsonPayLoad)
-                        .retrieve()
-                        .onStatus(httpStatus -> true, (request, response) -> {
-                            HttpStatusCode statusCode = response.getStatusCode();
+            restClient.post()
+                    .uri(bestillingEndpointUrl)
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + bearerToken)
+                    .body(jsonPayLoad)
+                    .retrieve()
+                    .onStatus(HttpStatusCode::isError, (request, response) -> {
+                        String responseBody = new String(response.getBody().readAllBytes());
+                        throw new RuntimeException("HTTP " + response.getStatusCode() +
+                                " when calling " + bestillingEndpointUrl +
+                                ". Response: " + responseBody);
+                    })
+                    .body(String.class);
 
-                            isError.set(statusCode.is4xxClientError() || statusCode.is5xxServerError());
-
-                            // Get response body for better error context
-                            response.getBody();
-                            String responseBody = response.getBody().toString();
-
-                            // Create a proper exception with useful information
-                            Exception ex = new RuntimeException("HTTP " + statusCode +
-                                    " when calling " + bestillingEndpointUrl +
-                                    ". Response: " + responseBody);
-
-                            skrivLogg(System.currentTimeMillis() - startTime, jsonPayLoad,
-                                    isError.get() ? new Exception() : null);
-
-                            if (isError.get()) {
-                                logger.error("Error calling endpoint. Status: {}, Response: {}",
-                                        statusCode, responseBody);
-                                try {
-                                    throw ex; // Throw the meaningful exception we created
-                                } catch (Exception e) {
-                                    throw new RuntimeException(e);
-                                }
-
-
-                            /*
-                            if (isError.get()) {
-                                logger.info("statusCode: {}", statusCode);
-                                throw new RuntimeException(statusCode + " occurred");
-                            */} else {
-                                // Oppdater status i database
-                                int antallKvitt = oppdaterBestillingService.updateKvitteringStatus(jsonPayLoad);
-                                logger.info("Antall kvitteringer overført: {}", antallKvitt);
-                            }
-                        })
-                        .body(String.class);
-            }
-            else {
-                STATUS = "TOM";
-                /*skrivLogg(System.currentTimeMillis() - startTime, jsonPayLoad,
-                        isError.get() ? new Exception() : null);*/
-            }
+            skrivLogg(System.currentTimeMillis() - startTime, jsonPayLoad, null);
+            int antallKvitt = oppdaterBestillingService.updateKvitteringStatus(jsonPayLoad);
+            logger.info("Antall kvitteringer overført: {}", antallKvitt);
 
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            skrivLogg(System.currentTimeMillis() - startTime, jsonPayLoad, e);
+            logger.error("Feil ved kall til {}: {}", bestillingEndpointUrl, e.getMessage(), e);
             throw new RuntimeException("Kunne ikke sende forespørselen", e);
         }
     }
