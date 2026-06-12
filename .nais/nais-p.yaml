@@ -36,6 +36,11 @@ spec:
       allowAllUsers: true
       tenant: nav.no
 
+  observability:
+    autoInstrumentation:
+      enabled: true
+      runtime: java
+
   accessPolicy:
     inbound:
       rules:

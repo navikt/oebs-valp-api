@@ -6,6 +6,8 @@ REST API service that integrates OEBS (Oracle E-Business Suite) with tiltaksokon
 
 ## Architecture
 
+#todo: legge til illustrasjon
+
 The service acts as a middleware between tiltaksokonomi and the OEBS Oracle database.
 Tiltaksokonomi posts bestilling and faktura data to OEBS via POST endpoints exposed by this service.
 The service also runs two scheduled jobs that daily fetch bestillingskvitteringer and fakturakvitteringer from OEBS via PL/SQL and forward them to tiltaksokonomi via REST.
@@ -37,7 +39,7 @@ tiltaksokonomi posts bestilling and faktura data to OEBS via POST endpoints:
 | `POST /api/v1/bestilling` | Receives bestilling data and stores it in OEBS via PL/SQL |
 | `POST /api/v1/faktura` | Receives faktura data and stores it in OEBS via PL/SQL |
 
-#### Outbound scheduled flow — OEBS → tiltaksokonomi
+#### Outbound scheduled flow — OEBS → tiltaksokonomi #todo: endre hvis controllerene skal slettes
 
 Two scheduled jobs run daily and push kvitteringer from OEBS to tiltaksokonomi:
 
@@ -57,35 +59,30 @@ Consumers can query kvittering data directly via GET endpoints:
 
 ### OEBS PL/SQL procedures
 
-Installation of the packages and log tables in OEBS used by this repository is handled by an install script in the [OEBS repository](https://github.com/navikt/oebs).
-
-The PL/SQL package used is `xxrtv_po_ap_api_pkg`, which contains the procedures:
-- `xxrtv_bestillingskvittering`
-- `xxrtv_fakturakvittering`
+todo: Legge til info om plsql pakkene som kjøres 
 
 ---
 
 ## Dependencies
 
-| System | Purpose |
-|--------|---------|
+| System | Purpose                                                                        |
+|--------|--------------------------------------------------------------------------------|
 | **OEBS Oracle Database** | Source and target for all business data; accessed via PL/SQL stored procedures |
-| **tiltaksokonomi** (team-mulighetsrommet) | Consumer of bestilling/faktura APIs and target for scheduled kvittering push |
-| **oebs-fullmakt** | Internal consumer with access to the service |
-| **Azure AD** | OAuth2/JWT security via `no.nav.security:token-validation-spring` |
-| **NAIS platform** | Container orchestration, secrets management, and deployment |
+| **tiltaksokonomi** (team-mulighetsrommet) | Consumer of bestilling/faktura APIs and target for scheduled kvittering push   |
+| **oebs-fullmakt** | todo: Hva er dette og hvorfor tilgang                                          |
+| **Azure AD** | OAuth2/JWT security via `no.nav.security:token-validation-spring`              |
+| **NAIS platform** | Container orchestration, secrets management, and deployment                    |
 
 ---
 
 ## Running Locally
 
-To run the service locally, use the `local` profile and set the following environment variables. Values for secrets can be retrieved from the NAIS console for the application `oebs-po-ap-api-q1`:
+To run the service locally, use the `local` profile and set the following environment variables. Values for all secrets can be retrieved from the NAIS console for the application `oebs-po-ap-q1`:
 
-- `OEBS_USERNAME` – username for OEBS
-- `OEBS_PASSWORD` – password for OEBS
-- `OEBS_URL` – JDBC URL for OEBS
+- `DB_USERNAME` – username for OEBS
+- `DB_PASSWORD` – password for OEBS
+- `DB_URL` – URL for OEBS
 - `AZURE_APP_WELL_KNOWN_URL` – discovery URL for the Azure AD app
-- `NAIS_TOKEN_ENDPOINT` – endpoint for fetching machine-to-machine tokens (Texas)
 
 You must also have connectivity to the OEBS database in the secure zone.
 You can either use **vdi-utvikler-oebs** (a VDI set up for development in the secure zone) or the **Global Secure Access Client**.
@@ -93,7 +90,7 @@ For more information, see the [oksty developer documentation](https://github.com
 
 [Swagger UI](http://localhost:8080/swagger-ui/index.html) is available when running locally,
 but all endpoints are protected by Azure AD by default. To test endpoints without authentication,
-replace the `@Protected` annotation in a controller with `@Unprotected`.
+replace the `@Protected` annotation in a controller with `@Unprotected` for one of the GET endpoints.
 
 ---
 
@@ -104,8 +101,6 @@ Unit tests are set up using JUnit and Mockito. No integration tests are currentl
 ---
 
 ## Monitoring and Alerting
-
-No alerting is currently configured. Issues must be detected by users experiencing errors or through observed problems in OEBS that can be traced back to the API.
 
 Standard application monitoring is available via Grafana dashboards:
 - [Grafana dashboard for q1](https://grafana.nav.cloud.nais.io/a/nais-apm-app/services/team-oebs/oebs-po-ap-api-q1?namespace=team-oebs&environment=dev-fss)

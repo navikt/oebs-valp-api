@@ -35,6 +35,11 @@ spec:
       enabled: true
       allowAllUsers: true
       tenant: trygdeetaten.no
+
+  observability:
+    autoInstrumentation:
+      enabled: true
+      runtime: java
       
   accessPolicy:
     inbound:

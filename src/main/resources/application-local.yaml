@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: oebs-po-api-api
+
+  jpa:
+    database-platform: org.hibernate.dialect.OracleDialect
+
+no.nav.security.jwt:
+  issuer:
+    azure:
+      accepted_audience: 1243
+      proxyurl:
+
+oebs:
+  environment: OEBSP
+
+token:
+  target: api://tiltaksokonomi-mock/.default
+
+tiltaksokonomi:
+  base.url: https://mock-tiltaksokonomi.net/
+
+nais-token-endpoint: http://mock/api/v1/token
