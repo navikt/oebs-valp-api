@@ -1,6 +1,5 @@
 package no.nav.oebs.po_ap.api.bestilling.v1;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.oebs.po_ap.db.repository.PlsqlProcedureRepository;
 import no.nav.oebs.po_ap.db.repository.PlsqlProcedureResult;
 import no.nav.oebs.po_ap.exception.TechnicalPlsqlException;
@@ -10,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import tools.jackson.databind.json.JsonMapper;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -26,7 +26,7 @@ class BestillingsServiceTest {
 
     @BeforeEach
     void setUp() {
-        service = new BestillingsService(plsqlProcedureRepository, new ObjectMapper());
+        service = new BestillingsService(plsqlProcedureRepository, new JsonMapper());
     }
 
     @Nested

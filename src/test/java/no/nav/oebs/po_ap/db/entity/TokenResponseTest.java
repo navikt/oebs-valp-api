@@ -1,7 +1,7 @@
 package no.nav.oebs.po_ap.db.entity;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import tools.jackson.databind.json.JsonMapper;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,12 +24,12 @@ class TokenResponseTest {
     }
 
     @Test
-    void deserializeFromJson_mapsAccessTokenAndExpiresIn() throws Exception {
+    void deserializeFromJson_mapsAccessTokenAndExpiresIn() {
         String json = """
                 {"access_token": "abc123", "expires_in": 1800}
                 """;
 
-        TokenResponse result = new ObjectMapper().readValue(json, TokenResponse.class);
+        TokenResponse result = new JsonMapper().readValue(json, TokenResponse.class);
 
         assertEquals("abc123", result.getAccessToken());
         assertEquals(1800L, result.getExpiresIn());
