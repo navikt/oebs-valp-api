@@ -1,6 +1,5 @@
 package no.nav.oebs.po_ap.api.bestillingskvittering.v1;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import no.nav.oebs.po_ap.api.common.utils.ObjektMaps;
 import no.nav.oebs.po_ap.api.bestillingskvittering.v1.model.BestillingsKvitteringsRequest;
@@ -8,6 +7,7 @@ import no.nav.oebs.po_ap.db.repository.PlsqlProcedureRepository;
 import no.nav.oebs.po_ap.db.repository.PlsqlProcedureResult;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tools.jackson.databind.json.JsonMapper;
 
 
 @Slf4j
@@ -19,7 +19,7 @@ public class BestillingsKvitteringsService extends ObjektMaps {
 
 	private PlsqlProcedureRepository plsqlProcedureRepository;
 
-	public BestillingsKvitteringsService(PlsqlProcedureRepository plsqlProcedureRepository, ObjectMapper objectMapper) {
+	public BestillingsKvitteringsService(PlsqlProcedureRepository plsqlProcedureRepository, JsonMapper objectMapper) {
 		super(objectMapper);
 		this.plsqlProcedureRepository = plsqlProcedureRepository;
 	}

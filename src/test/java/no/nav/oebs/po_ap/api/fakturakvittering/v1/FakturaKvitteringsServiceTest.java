@@ -1,6 +1,5 @@
 package no.nav.oebs.po_ap.api.fakturakvittering.v1;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.oebs.po_ap.db.repository.PlsqlProcedureRepository;
 import no.nav.oebs.po_ap.db.repository.PlsqlProcedureResult;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import tools.jackson.databind.json.JsonMapper;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -25,7 +25,7 @@ class FakturaKvitteringsServiceTest {
 
     @BeforeEach
     void setUp() {
-        service = new FakturaKvitteringsService(plsqlProcedureRepository, new ObjectMapper());
+        service = new FakturaKvitteringsService(plsqlProcedureRepository, new JsonMapper());
     }
 
     @Test
