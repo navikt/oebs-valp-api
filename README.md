@@ -1,12 +1,19 @@
 # oebs-po-ap-api
 
-REST API service that integrates OEBS (Oracle E-Business Suite) with tiltaksokonomi (team-mulighetsrommet). The service exposes PL/SQL stored procedures from OEBS as REST endpoints for receiving purchase order (bestilling) and invoice (faktura) data. It also runs scheduled jobs that push bestillingskvitteringer and fakturakvitteringer from OEBS to tiltaksokonomi daily.
+Middleware service between **tiltaksokonomi** (team-mulighetsrommet) and the **OEBS Oracle database** (Oracle E-Business Suite).
+
+The service handles data flow in both directions:
+- Receives bestilling and faktura data from tiltaksokonomi and stores it in OEBS via PL/SQL stored procedures
+- Runs daily scheduled jobs that fetch bestillingskvitteringer and fakturakvitteringer from OEBS and push them back to tiltaksokonomi
+- Exposes GET endpoints for querying kvittering data directly from OEBS
+
+All communication is secured with Azure AD and logged to OEBS via `KallLogg`.
 
 ---
 
 ## Architecture
 
-#todo: legge til illustrasjon
+![Architecture diagram](./docs/service-illustration.png)
 
 The service acts as a middleware between tiltaksokonomi and the OEBS Oracle database.
 Tiltaksokonomi posts bestilling and faktura data to OEBS via POST endpoints exposed by this service.
@@ -29,6 +36,12 @@ Deployment order: **q1 → prod**. Production deployment requires manual approva
 ### Data flow
 
 All requests and responses are logged to the OEBS database table via `KallLogg`, including correlation ID, timestamps, duration, and status codes.
+
+The service handles three data flow directions:
+
+- **Inbound** — tiltaksokonomi sends bestilling and faktura data to OEBS via POST endpoints
+- **Outbound (scheduled)** — two daily jobs fetch kvitteringer from OEBS via PL/SQL and push them to tiltaksokonomi
+- **Query** — consumers can query kvittering data directly via GET endpoints
 
 #### Inbound flow — tiltaksokonomi → OEBS
 
