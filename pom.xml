@@ -9,7 +9,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.5</version>
+        <version>4.0.6</version>
         <relativePath/>
     </parent>
 
@@ -29,13 +29,9 @@
         <surefire.coverage.argLine/>
 
         <!-- NAV artifacts -->
-        <token-validation.version>5.0.16</token-validation.version>
-        <logstash-logback-encoder.version>8.0</logstash-logback-encoder.version>
-        <nimbus-jose-jwt.version>10.0.1</nimbus-jose-jwt.version>
-        <springdoc-openapi.version>1.8.0</springdoc-openapi.version>
-        <sonar-maven-plugin.version>5.0.0.4389</sonar-maven-plugin.version>
-        <logback-core>1.5.16</logback-core>
-        <logback-classic>1.5.16</logback-classic>
+        <token-validation.version>5.0.30</token-validation.version>
+        <logstash-logback-encoder.version>9.0</logstash-logback-encoder.version>
+        <sonar-maven-plugin.version>5.7.0.6970</sonar-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -60,11 +56,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
 
         <dependency>
@@ -95,12 +86,12 @@
         <dependency>
             <groupId>net.javacrumbs.shedlock</groupId>
             <artifactId>shedlock-spring</artifactId>
-            <version>5.16.0</version>
+            <version>7.7.0</version>
         </dependency>
         <dependency>
             <groupId>net.javacrumbs.shedlock</groupId>
             <artifactId>shedlock-provider-jdbc-template</artifactId>
-            <version>5.16.0</version>
+            <version>7.7.0</version>
         </dependency>
 
         <!-- Metrics dependencies -->
@@ -109,22 +100,10 @@
             <artifactId>micrometer-registry-prometheus</artifactId>
         </dependency>
 
-        <!-- JAXB (bruker samme artifakter som Spring Boot)-->
-        <dependency>
-            <groupId>jakarta.xml.bind</groupId>
-            <artifactId>jakarta.xml.bind-api</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.glassfish.jaxb</groupId>
-            <artifactId>jaxb-runtime</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>2.7.0</version>
+            <version>3.0.3</version>
         </dependency>
 
         <dependency>
@@ -143,27 +122,8 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.30</version>
+            <version>1.18.46</version>
             <scope>provided</scope>
-        </dependency>
-
-        <!-- Jetty HTTP Client -->
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-reactive-httpclient</artifactId>
-        </dependency>
-
-        <!-- Nimbus JWT support -->
-        <dependency>
-            <groupId>com.nimbusds</groupId>
-            <artifactId>nimbus-jose-jwt</artifactId>
-            <version>${nimbus-jose-jwt.version}</version>
-        </dependency>
-
-        <!-- Commons -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
         </dependency>
 
         <!-- Test dependencies -->
@@ -225,7 +185,7 @@
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.8.14</version>
+                        <version>0.8.15</version>
                         <executions>
                             <execution>
                                 <id>prepare-agent</id>

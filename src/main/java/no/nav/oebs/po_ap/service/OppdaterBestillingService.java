@@ -1,11 +1,11 @@
 package no.nav.oebs.po_ap.service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.oebs.po_ap.config.BestillingDto;
 import no.nav.oebs.po_ap.db.repository.BestillingRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.core.type.TypeReference;
 
 import java.io.IOException;
 import java.util.List;
@@ -14,16 +14,16 @@ import java.util.List;
     public class OppdaterBestillingService {
 
         private final BestillingRepository repository;
-        private final ObjectMapper objectMapper;
+        private final JsonMapper objectMapper;
 
-        public OppdaterBestillingService(BestillingRepository repository, ObjectMapper objectMapper) {
+        public OppdaterBestillingService(BestillingRepository repository, JsonMapper objectMapper) {
             this.repository = repository;
             this.objectMapper = objectMapper;
         }
 
         @Transactional
-        public int updateKvitteringStatus(String jsonString) throws IOException {
-            List<BestillingDto> bestillinger = objectMapper.readValue(jsonString, new TypeReference<List<BestillingDto>>() {});
+        public int updateKvitteringStatus(String jsonString) {
+            List<BestillingDto> bestillinger = objectMapper.readValue(jsonString, new TypeReference<>() {});
 
             for (BestillingDto bestilling : bestillinger) {
                 repository.updateKvitteringStatus(bestilling.getBestillingsNummer());

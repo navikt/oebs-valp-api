@@ -1,6 +1,5 @@
 package no.nav.oebs.po_ap.api.bestilling.v1;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import no.nav.oebs.po_ap.api.common.utils.ObjektMaps;
 import no.nav.oebs.po_ap.db.repository.PlsqlProcedureRepository;
@@ -8,6 +7,7 @@ import no.nav.oebs.po_ap.db.repository.PlsqlProcedureResult;
 import no.nav.oebs.po_ap.exception.TechnicalPlsqlException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tools.jackson.databind.json.JsonMapper;
 
 
 @Slf4j
@@ -19,7 +19,7 @@ public class BestillingsService extends ObjektMaps {
 
 	private final PlsqlProcedureRepository plsqlProcedureRepository;
 
-	public BestillingsService(PlsqlProcedureRepository plsqlProcedureRepository, ObjectMapper objectMapper) {
+	public BestillingsService(PlsqlProcedureRepository plsqlProcedureRepository, JsonMapper objectMapper) {
 		super(objectMapper);
 		this.plsqlProcedureRepository = plsqlProcedureRepository;
 	}

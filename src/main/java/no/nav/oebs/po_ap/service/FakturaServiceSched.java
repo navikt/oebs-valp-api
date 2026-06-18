@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static no.nav.oebs.po_ap.config.common.mdc.MdcOperations.generateCorrelationId;
 
@@ -68,49 +67,38 @@ public class FakturaServiceSched {
 
     public void sendFaktura() {
 
+        STATUS = "OK";
         long startTime = System.currentTimeMillis();
 
-        AtomicBoolean isError = new AtomicBoolean(false);
-
         String bearerToken = tokenService.fetchToken(identityProvider, target);
-
         String jsonPayLoad = service.finnFakturaTransaksjoner(ORG_ID, PROCESSED);
 
+        if (!jsonPayLoad.contains("fakturaNummer")) {
+            STATUS = "TOM";
+            return;
+        }
+
         try {
-            if (jsonPayLoad.contains("fakturaNummer")) {
-                restClient.post()
-                        .uri(fakturaEndpointUrl)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + bearerToken)
-                        .body(jsonPayLoad)
-                        .retrieve()
-                        .onStatus(httpStatus -> true, (request, response) -> {
-                            HttpStatusCode statusCode = response.getStatusCode();
+            restClient.post()
+                    .uri(fakturaEndpointUrl)
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + bearerToken)
+                    .body(jsonPayLoad)
+                    .retrieve()
+                    .onStatus(HttpStatusCode::isError, (request, response) -> {
+                        String responseBody = new String(response.getBody().readAllBytes());
+                        throw new RuntimeException("HTTP " + response.getStatusCode() +
+                                " when calling " + fakturaEndpointUrl +
+                                ". Response: " + responseBody);
+                    })
+                    .body(String.class);
 
-                            isError.set(statusCode.is4xxClientError() || statusCode.is5xxServerError());
-
-                            skrivLogg(System.currentTimeMillis() - startTime, jsonPayLoad,
-                                    isError.get() ? new Exception() : null);
-
-                            if (isError.get()) {
-                                logger.info("statusCode: {}", statusCode);
-
-                                throw new RuntimeException(statusCode + " occurred");
-                            } else {
-                                // Oppdater status i database
-                                int antallKvitt = oppdaterFakturaService.updateKvitteringStatus(jsonPayLoad);
-                                logger.info("Antall kvitteringer overført: {}", antallKvitt);
-                            }
-                        })
-                        .body(String.class);
-            }
-            else {
-                STATUS = "TOM";
-                /*skrivLogg(System.currentTimeMillis() - startTime, jsonPayLoad,
-                        isError.get() ? new Exception() : null);*/
-            }
+            skrivLogg(System.currentTimeMillis() - startTime, jsonPayLoad, null);
+            int antallKvitt = oppdaterFakturaService.updateKvitteringStatus(jsonPayLoad);
+            logger.info("Antall kvitteringer overført: {}", antallKvitt);
 
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            skrivLogg(System.currentTimeMillis() - startTime, jsonPayLoad, e);
+            logger.error("Feil ved kall til {}: {}", fakturaEndpointUrl, e.getMessage(), e);
             throw new RuntimeException("Kunne ikke sende forespørselen", e);
         }
     }
