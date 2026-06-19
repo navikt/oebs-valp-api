@@ -4,6 +4,7 @@ import no.nav.oebs.po_ap.api.fakturakvittering.v1.FakturaKvitteringsService;
 import no.nav.oebs.po_ap.db.entity.KallLogg;
 import no.nav.oebs.po_ap.db.repository.KallLoggRepository;
 import no.nav.oebs.po_ap.db.repository.PlsqlMessageCodes;
+import no.nav.oebs.po_ap.exception.SchedServiceException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -36,7 +37,7 @@ class FakturaServiceSchedTest {
 
     @BeforeEach
     void setUp() {
-        service = new FakturaServiceSched();
+        service = new FakturaServiceSched(oppdaterFakturaService, tokenService, fakturaKvitteringsService, kallLoggRepository);
         ReflectionTestUtils.setField(service, "tokenService", tokenService);
         ReflectionTestUtils.setField(service, "service", fakturaKvitteringsService);
         ReflectionTestUtils.setField(service, "oppdaterFakturaService", oppdaterFakturaService);
@@ -70,7 +71,7 @@ class FakturaServiceSchedTest {
 
         @Test
         void sendFaktura_initialStatusIsOk() {
-            assertEquals("OK", service.STATUS);
+            assertEquals("OK", service.getStatus());
         }
 
         @Test
@@ -81,7 +82,7 @@ class FakturaServiceSchedTest {
 
             service.sendFaktura();
 
-            assertEquals("TOM", service.STATUS);
+            assertEquals("TOM", service.getStatus());
         }
 
         @Test
@@ -115,7 +116,7 @@ class FakturaServiceSchedTest {
         }
 
         @Test
-        void sendFaktura_whenPayloadContainsFakturaNummer_callsHttpEndpoint() throws Exception {
+        void sendFaktura_whenPayloadContainsFakturaNummer_callsHttpEndpoint()  {
             stubPayloadWithFaktura();
             when(oppdaterFakturaService.updateKvitteringStatus(anyString())).thenReturn(1);
             stubRestClientSuccess();
@@ -126,7 +127,7 @@ class FakturaServiceSchedTest {
         }
 
         @Test
-        void sendFaktura_whenPayloadContainsFakturaNummer_callsOppdaterFakturaService() throws Exception {
+        void sendFaktura_whenPayloadContainsFakturaNummer_callsOppdaterFakturaService()  {
             stubPayloadWithFaktura();
             when(oppdaterFakturaService.updateKvitteringStatus(anyString())).thenReturn(1);
             stubRestClientSuccess();
@@ -137,7 +138,7 @@ class FakturaServiceSchedTest {
         }
 
         @Test
-        void sendFaktura_whenPayloadContainsFakturaNummer_savesKallLoggWithSuccessStatus() throws Exception {
+        void sendFaktura_whenPayloadContainsFakturaNummer_savesKallLoggWithSuccessStatus()  {
             stubPayloadWithFaktura();
             when(oppdaterFakturaService.updateKvitteringStatus(anyString())).thenReturn(1);
             stubRestClientSuccess();
@@ -150,21 +151,19 @@ class FakturaServiceSchedTest {
         }
 
         @Test
-        void sendFaktura_whenRestClientThrows_throwsRuntimeExceptionWithCause() {
+        void sendFaktura_whenRestClientThrows_throwsSchedServiceException() {
             stubPayloadWithFaktura();
-            when(restClient.post()).thenThrow(new RuntimeException("connection refused"));
+            when(restClient.post()).thenThrow(new SchedServiceException("connection refused"));
 
-            RuntimeException ex = assertThrows(RuntimeException.class, () -> service.sendFaktura());
-            assertEquals("Kunne ikke sende forespørselen", ex.getMessage());
-            assertNotNull(ex.getCause());
+            assertThrows(SchedServiceException.class, () -> service.sendFaktura());
         }
 
         @Test
         void sendFaktura_whenRestClientThrows_savesKallLoggWithErrorStatus() {
             stubPayloadWithFaktura();
-            when(restClient.post()).thenThrow(new RuntimeException("connection refused"));
+            when(restClient.post()).thenThrow(new SchedServiceException("connection refused"));
 
-            assertThrows(RuntimeException.class, () -> service.sendFaktura());
+            assertThrows(SchedServiceException.class, () -> service.sendFaktura());
 
             ArgumentCaptor<KallLogg> captor = ArgumentCaptor.forClass(KallLogg.class);
             verify(kallLoggRepository).save(captor.capture());
@@ -172,7 +171,7 @@ class FakturaServiceSchedTest {
         }
 
         @Test
-        void sendFaktura_whenOppdaterServiceThrows_throwsRuntimeException() throws Exception {
+        void sendFaktura_whenOppdaterServiceThrows_throwsRuntimeException()  {
             stubPayloadWithFaktura();
             stubRestClientSuccess();
             when(oppdaterFakturaService.updateKvitteringStatus(anyString()))

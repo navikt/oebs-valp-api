@@ -17,7 +17,7 @@ public class BestillingsKvitteringsService extends ObjektMaps {
 
 	private static final String PLSQL_PROCEDURE = "xxrtv_po_ap_api_pkg.xxrtv_bestillingskvittering";
 
-	private PlsqlProcedureRepository plsqlProcedureRepository;
+	private final PlsqlProcedureRepository plsqlProcedureRepository;
 
 	public BestillingsKvitteringsService(PlsqlProcedureRepository plsqlProcedureRepository, JsonMapper objectMapper) {
 		super(objectMapper);
@@ -27,10 +27,10 @@ public class BestillingsKvitteringsService extends ObjektMaps {
 	/**
 	 * Bygger et requestobjekt som skal konverteres til JSON.
 	 */
-	private BestillingsKvitteringsRequest buildRequest(Integer org_id, String po_number) {
+	private BestillingsKvitteringsRequest buildRequest(Integer orgId, String poNumber) {
 		return BestillingsKvitteringsRequest.builder() //
-				.org_id(org_id) //
-				.po_number(po_number) //
+				.orgId(orgId) //
+				.poNumber(poNumber) //
 				.build();
 	}
 
@@ -43,9 +43,9 @@ public class BestillingsKvitteringsService extends ObjektMaps {
 		return plsqlProcedureRepository.executeInOutProcedure(PLSQL_PROCEDURE, toJson(request));
 	}
 
-	public String finnBestillingsTransaksjoner(Integer org_id, String po_number) {
+	public String finnBestillingsTransaksjoner(Integer orgId, String poNumber) {
 
-		PlsqlProcedureResult result = executePlsqlProcedure(buildRequest(org_id, po_number));
+		PlsqlProcedureResult result = executePlsqlProcedure(buildRequest(orgId, poNumber));
 
 		return result.getData();
 

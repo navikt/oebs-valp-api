@@ -35,7 +35,7 @@ class ScheduledTaskFakturaTest {
 
     @Test
     void process_whenStatusIsNotOk_doesNotSleep() {
-        fakturaServiceSched.STATUS = "TOM";
+        fakturaServiceSched.setStatus("TOM");
 
         scheduledTaskFaktura.process();
 

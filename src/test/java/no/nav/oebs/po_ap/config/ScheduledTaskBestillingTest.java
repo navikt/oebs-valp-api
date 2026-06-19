@@ -35,7 +35,7 @@ class ScheduledTaskBestillingTest {
 
     @Test
     void process_whenStatusIsNotOk_doesNotSleep() {
-        bestillingServiceSched.STATUS = "TOM";
+        bestillingServiceSched.setStatus("TOM");
 
         scheduledTaskBestilling.process();
 

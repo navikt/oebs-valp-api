@@ -40,7 +40,7 @@ class BestillingsKvitteringsServiceTest {
 
     @Test
     void finnBestillingsTransaksjoner_whenDataIsNull_returnsNull() {
-        var result = new PlsqlProcedureResult((String) null, 0, null);
+        var result = new PlsqlProcedureResult( null, 0, null);
         when(plsqlProcedureRepository.executeInOutProcedure(anyString(), anyString())).thenReturn(result);
 
         String data = service.finnBestillingsTransaksjoner(202, "PROCESSED");
@@ -49,7 +49,7 @@ class BestillingsKvitteringsServiceTest {
     }
 
     @Test
-    void finnBestillingsTransaksjoner_sendsCorrectOrgIdAndPoNumber() throws Exception {
+    void finnBestillingsTransaksjoner_sendsCorrectOrgIdAndPoNumber() {
         var result = new PlsqlProcedureResult("[]", 0, null);
         when(plsqlProcedureRepository.executeInOutProcedure(anyString(), anyString())).thenReturn(result);
 
