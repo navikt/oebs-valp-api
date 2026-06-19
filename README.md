@@ -17,8 +17,8 @@ All communication is secured with Azure AD and logged to OEBS via `KallLogg`.
 
 The service acts as a middleware between tiltaksokonomi and the OEBS Oracle database.
 Tiltaksokonomi posts bestilling and faktura data to OEBS via POST endpoints exposed by this service.
-The service also runs two scheduled jobs that daily fetch bestillingskvitteringer and fakturakvitteringer from OEBS via PL/SQL and forward them to tiltaksokonomi via REST.
-ShedLock (backed by the Oracle table `xxrtv_shedlock`) ensures that only one pod runs each scheduled job at a time.
+The service also runs two scheduled jobs that fetch bestillingskvitteringer and fakturakvitteringer from OEBS via PL/SQL and forward them to tiltaksokonomi via REST.
+Additionally, the service exposes GET endpoints that allow consumers to query kvittering data directly from OEBS.
 
 ---
 
@@ -82,9 +82,13 @@ todo: Legge til info om plsql pakkene som kjøres
 |--------|--------------------------------------------------------------------------------|
 | **OEBS Oracle Database** | Source and target for all business data; accessed via PL/SQL stored procedures |
 | **tiltaksokonomi** (team-mulighetsrommet) | Consumer of bestilling/faktura APIs and target for scheduled kvittering push   |
-| **oebs-fullmakt** | todo: Hva er dette og hvorfor tilgang                                          |
 | **Azure AD** | OAuth2/JWT security via `no.nav.security:token-validation-spring`              |
 | **NAIS platform** | Container orchestration, secrets management, and deployment                    |
+
+### Consumers
+The only consumer of this service is team-mulighetsroms service `tiltaksokonomi`, which is an internal NAV service.
+Changes that requires updates on the consumer side (e.g. new endpoints, changes to request/response formats, etc.) must be coordinated
+with team-mulighetsrom in the slack channel [samarbeid-valp-oebs](https://nav-it.slack.com/archives/C07HA39HQ3G).
 
 ---
 
@@ -94,12 +98,12 @@ To run the service locally, use the `local` profile and set the following enviro
 
 - `DB_USERNAME` – username for OEBS
 - `DB_PASSWORD` – password for OEBS
-- `DB_URL` – URL for OEBS
+- `DB_URL` – URL for OEBS, find in https://confluence.adeo.no/spaces/ITO/pages/39159672/OeBS+Oversikt+over+milj%C3%B8er
 - `AZURE_APP_WELL_KNOWN_URL` – discovery URL for the Azure AD app
 
 You must also have connectivity to the OEBS database in the secure zone.
 You can either use **vdi-utvikler-oebs** (a VDI set up for development in the secure zone) or the **Global Secure Access Client**.
-For more information, see the [oksty developer documentation](https://github.com/navikt/oksty-documentation).
+For more information, see the [oebs access documentation](https://navikt.github.io/oksty-documentation/docs/team-oebs/oebs-access).
 
 [Swagger UI](http://localhost:8080/swagger-ui/index.html) is available when running locally,
 but all endpoints are protected by Azure AD by default. To test endpoints without authentication,
@@ -151,3 +155,6 @@ Swagger UI is available when the application is running:
 
 - [Swagger q1](https://oebs-po-ap-api-q1.intern.dev.nav.no/swagger-ui/index.html#/)
 - [Swagger prod](https://oebs-po-ap-api.intern.nav.no/swagger-ui/index.html#/)
+
+### Confluence 
+todo: Er det noe dokumentasjon på confluence? 
