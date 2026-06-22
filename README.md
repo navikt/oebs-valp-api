@@ -1,5 +1,9 @@
 # oebs-po-ap-api
 
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=navikt_oebs-valp-api&metric=coverage)](https://sonarcloud.io/summary/new_code?id=navikt_oebs-valp-api)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=navikt_oebs-valp-api&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=navikt_oebs-valp-api)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=navikt_oebs-valp-api&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=navikt_oebs-valp-api)
+
 Middleware service between **tiltaksokonomi** (team-mulighetsrommet) and the **OEBS Oracle database** (Oracle E-Business Suite).
 
 The service handles data flow in both directions:
@@ -52,7 +56,7 @@ tiltaksokonomi posts bestilling and faktura data to OEBS via POST endpoints:
 | `POST /api/v1/bestilling` | Receives bestilling data and stores it in OEBS via PL/SQL |
 | `POST /api/v1/faktura` | Receives faktura data and stores it in OEBS via PL/SQL |
 
-#### Outbound scheduled flow — OEBS → tiltaksokonomi #todo: endre hvis controllerene skal slettes
+#### Outbound scheduled flow — OEBS → tiltaksokonomi
 
 Two scheduled jobs run daily and push kvitteringer from OEBS to tiltaksokonomi:
 
@@ -72,7 +76,8 @@ Consumers can query kvittering data directly via GET endpoints:
 
 ### OEBS PL/SQL procedures
 
-todo: Legge til info om plsql pakkene som kjøres 
+Install script for PL/SQL procedures can be found in the oebs repository
+[install_oebs_1434_po_ap.sh](https://github.com/navikt/oebs/blob/main/install/install_oebs_1434_po_ap.sh)
 
 ---
 
@@ -157,4 +162,4 @@ Swagger UI is available when the application is running:
 - [Swagger prod](https://oebs-po-ap-api.intern.nav.no/swagger-ui/index.html#/)
 
 ### Confluence 
-todo: Er det noe dokumentasjon på confluence? 
+No additional documentation is available.
