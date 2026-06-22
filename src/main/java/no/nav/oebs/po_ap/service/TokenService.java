@@ -45,7 +45,7 @@ public class TokenService {
                 "target", target
         );
 
-        TokenResponse response; // = null;
+        TokenResponse response;
         try {
             response = restClient.post()
                     .uri("/api/v1/token")

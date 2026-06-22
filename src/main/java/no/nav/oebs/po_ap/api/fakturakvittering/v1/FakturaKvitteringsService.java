@@ -23,10 +23,10 @@ public class FakturaKvitteringsService extends ObjektMaps {
 		this.plsqlProcedureRepository = plsqlProcedureRepository;
 	}
 
-	private FakturaInfoRequest buildRequest(Integer org_id, String po_number) {
+	private FakturaInfoRequest buildRequest(Integer orgId, String poNumber) {
 		return FakturaInfoRequest.builder() //
-				.org_id(org_id) //
-				.faktura_num(po_number) //
+				.orgId(orgId) //
+				.fakturaNum(poNumber) //
 				.build();
 	}
 
@@ -36,9 +36,9 @@ public class FakturaKvitteringsService extends ObjektMaps {
 	}
 
 
-	public String finnFakturaTransaksjoner(Integer org_id, String po_number) {
+	public String finnFakturaTransaksjoner(Integer orgId, String poNumber) {
 
-		PlsqlProcedureResult result = executePlsqlProcedure(buildRequest(org_id, po_number));
+		PlsqlProcedureResult result = executePlsqlProcedure(buildRequest(orgId, poNumber));
 
 		return result.getData();
 

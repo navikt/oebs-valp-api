@@ -28,7 +28,7 @@ public class BestillingsController {
 	@Protected
 	@PostMapping(path = "/bestilling")
 	@PoApSwagger
-	public ResponseEntity<String> lagreBestilling(@RequestParam(defaultValue = "202") String org_id,
+	public ResponseEntity<String> lagreBestilling(@RequestParam(defaultValue = "202") String orgid,
 													 @Valid @RequestBody String message) {
 
 		return ResponseEntity

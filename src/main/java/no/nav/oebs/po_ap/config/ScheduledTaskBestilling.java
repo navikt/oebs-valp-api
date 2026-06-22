@@ -4,7 +4,6 @@ import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import no.nav.oebs.po_ap.service.BestillingServiceSched;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -15,8 +14,12 @@ public class ScheduledTaskBestilling {
 
     private static final Logger logger = LoggerFactory.getLogger(ScheduledTaskBestilling.class);
 
-    @Autowired
-    BestillingServiceSched bestillingServiceSched;
+    private final BestillingServiceSched bestillingServiceSched;
+
+    public ScheduledTaskBestilling(BestillingServiceSched bestillingServiceSched) {
+        this.bestillingServiceSched = bestillingServiceSched;
+    }
+
 
     @Scheduled(cron = "${scheduled.time.bestilling}")
     @SchedulerLock(
@@ -29,7 +32,7 @@ public class ScheduledTaskBestilling {
         try {
             bestillingServiceSched.sendBestilling();
 
-            if (Objects.equals(bestillingServiceSched.STATUS, "OK")) {
+            if (Objects.equals(bestillingServiceSched.getStatus(), "OK")) {
                 Thread.sleep(5000);
             }
 

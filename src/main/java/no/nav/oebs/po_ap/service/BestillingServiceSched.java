@@ -1,20 +1,24 @@
 package no.nav.oebs.po_ap.service;
 
 import jakarta.annotation.PostConstruct;
+import lombok.Getter;
+import lombok.Setter;
 import no.nav.oebs.po_ap.api.bestillingskvittering.v1.BestillingsKvitteringsService;
 import no.nav.oebs.po_ap.config.common.logging.LoggingUtils;
 import no.nav.oebs.po_ap.config.common.mdc.MdcOperations;
 import no.nav.oebs.po_ap.db.entity.KallLogg;
 import no.nav.oebs.po_ap.db.repository.KallLoggRepository;
 import no.nav.oebs.po_ap.db.repository.PlsqlMessageCodes;
+import no.nav.oebs.po_ap.exception.SchedServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.http.HttpHeaders;
+import org.springframework.web.client.RestClientException;
 
 import java.time.LocalDateTime;
 
@@ -23,22 +27,34 @@ import static no.nav.oebs.po_ap.config.common.mdc.MdcOperations.generateCorrelat
 @Service
 public class BestillingServiceSched {
 
-    public String STATUS = "OK" ;
-
-    @Autowired
-    private  OppdaterBestillingService oppdaterBestillingService;
-
-    private RestClient restClient;
     private final Logger logger = LoggerFactory.getLogger(BestillingServiceSched.class);
 
+    private static final String PROCNAME = "/api/v1/bestillingskvittering";
     private static final String PROCESSED = "PROCESSED";
     private static final Integer ORG_ID = 202;
 
-    @Autowired
-    private TokenService tokenService;
+    @Getter
+    @Setter
+    private String status = "OK" ;
+    private RestClient restClient;
 
-    @Autowired
-    private BestillingsKvitteringsService service;
+    private final OppdaterBestillingService oppdaterBestillingService;
+    private final TokenService tokenService;
+    private final BestillingsKvitteringsService service;
+    private final KallLoggRepository kallLoggRepository;
+
+    public BestillingServiceSched(
+            OppdaterBestillingService oppdaterBestillingService,
+            TokenService tokenService,
+            BestillingsKvitteringsService service,
+            KallLoggRepository kallLoggRepository
+    ) {
+        this.oppdaterBestillingService = oppdaterBestillingService;
+        this.tokenService = tokenService;
+        this.service = service;
+        this.kallLoggRepository = kallLoggRepository;
+     }
+
 
     @Value("${tiltaksokonomi.base.url}")
     private String baseUrl;
@@ -52,11 +68,6 @@ public class BestillingServiceSched {
     @Value("${token.target}")
     private String target;
 
-    private final static String procName = "/api/v1/bestillingskvittering";
-
-    @Autowired
-    private KallLoggRepository kallLoggRepository;
-
     @PostConstruct
     public void init() {
         this.restClient = RestClient.builder()
@@ -67,14 +78,14 @@ public class BestillingServiceSched {
 
     public void sendBestilling() {
 
-        STATUS = "OK";
+        setStatus("OK");
         long startTime = System.currentTimeMillis();
 
         String bearerToken = tokenService.fetchToken(identityProvider, target);
         String jsonPayLoad = service.finnBestillingsTransaksjoner(ORG_ID, PROCESSED);
 
         if (!jsonPayLoad.contains("bestillingsNummer")) {
-            STATUS = "TOM";
+            setStatus("TOM");
             return;
         }
 
@@ -86,7 +97,7 @@ public class BestillingServiceSched {
                     .retrieve()
                     .onStatus(HttpStatusCode::isError, (request, response) -> {
                         String responseBody = new String(response.getBody().readAllBytes());
-                        throw new RuntimeException("HTTP " + response.getStatusCode() +
+                        throw new SchedServiceException("HTTP " + response.getStatusCode() +
                                 " when calling " + bestillingEndpointUrl +
                                 ". Response: " + responseBody);
                     })
@@ -96,10 +107,12 @@ public class BestillingServiceSched {
             int antallKvitt = oppdaterBestillingService.updateKvitteringStatus(jsonPayLoad);
             logger.info("Antall kvitteringer overført: {}", antallKvitt);
 
-        } catch (Exception e) {
+        } catch (SchedServiceException e) {
             skrivLogg(System.currentTimeMillis() - startTime, jsonPayLoad, e);
-            logger.error("Feil ved kall til {}: {}", bestillingEndpointUrl, e.getMessage(), e);
-            throw new RuntimeException("Kunne ikke sende forespørselen", e);
+            throw e;
+        } catch (RestClientException | DataAccessException e) {
+            skrivLogg(System.currentTimeMillis() - startTime, jsonPayLoad, e);
+            throw new SchedServiceException("Feil ved kall til "+ bestillingEndpointUrl+" : "+ e.getMessage(), e);
         }
     }
 
@@ -112,7 +125,7 @@ public class BestillingServiceSched {
                     .type(KallLogg.TYPE_PLSQL) //
                     .kallRetning(KallLogg.RETNING_UT) //
                     .method(KallLogg.METHOD_POST) //
-                    .operation(BestillingServiceSched.procName) //
+                    .operation(BestillingServiceSched.PROCNAME) //
                     .status(exception != null //
                             ? PlsqlMessageCodes.EXCEPTION //
                             : 200) //
@@ -126,7 +139,8 @@ public class BestillingServiceSched {
 
             saveKallLogg(kallLogg);
         }
-}
+    }
+
 
     public void saveKallLogg(KallLogg kallLogg) {
         try {
@@ -135,4 +149,5 @@ public class BestillingServiceSched {
             logger.error("Feil ved logging av data til databasen; feilmelding=" + e.getMessage(), e);
         }
     }
+
 }
