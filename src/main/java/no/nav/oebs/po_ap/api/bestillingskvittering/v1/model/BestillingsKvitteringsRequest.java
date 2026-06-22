@@ -2,6 +2,7 @@ package no.nav.oebs.po_ap.api.bestillingskvittering.v1.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.*;
 
@@ -14,7 +15,9 @@ import lombok.*;
 @JsonPropertyOrder({ "org_id", "po_number" })
 public class BestillingsKvitteringsRequest {
 
-    private Integer org_id;
+    @JsonProperty("org_id")
+    private Integer orgId;
 
-    private String po_number;
+    @JsonProperty("po_number")
+    private String poNumber;
 }

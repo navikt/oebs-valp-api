@@ -1,7 +1,5 @@
 package no.nav.oebs.po_ap.api.common.utils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import no.nav.oebs.po_ap.db.repository.PlsqlMessageCodes;
 import no.nav.oebs.po_ap.db.repository.PlsqlProcedureResult;
 import no.nav.oebs.po_ap.exception.JsonMappingException;
@@ -15,7 +13,7 @@ import tools.jackson.databind.json.JsonMapper;
  */
 public class ObjektMaps {
 
-	private JsonMapper objectMapper;
+	private final JsonMapper objectMapper;
 
 	protected ObjektMaps(JsonMapper objectMapper) {
 		this.objectMapper = objectMapper;
@@ -25,13 +23,11 @@ public class ObjektMaps {
 	 * Kaster exception iht. feilkoden returnert fra PL/SQL-prosedyren.
 	 */
 	protected void throwPlsqlException(PlsqlProcedureResult result) {
-		switch (result.getMessageNumber()) {
-		case PlsqlMessageCodes.FEIL_I_INPUT:
-			throw new UgyldigInputException(result.getMessage());
-		default:
-			throw new TechnicalPlsqlException(result.getMessageNumber(), result.getMessage());
-		}
-	}
+        if (result.getMessageNumber() == PlsqlMessageCodes.FEIL_I_INPUT) {
+            throw new UgyldigInputException(result.getMessage());
+        }
+        throw new TechnicalPlsqlException(result.getMessageNumber(), result.getMessage());
+    }
 
 	/**
 	 * Mapper fra Java- til JSON-objekt.

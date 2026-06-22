@@ -4,6 +4,7 @@ import no.nav.oebs.po_ap.api.bestillingskvittering.v1.BestillingsKvitteringsServ
 import no.nav.oebs.po_ap.db.entity.KallLogg;
 import no.nav.oebs.po_ap.db.repository.KallLoggRepository;
 import no.nav.oebs.po_ap.db.repository.PlsqlMessageCodes;
+import no.nav.oebs.po_ap.exception.SchedServiceException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -36,7 +37,7 @@ class BestillingServiceSchedTest {
 
     @BeforeEach
     void setUp() {
-        service = new BestillingServiceSched();
+        service = new BestillingServiceSched(oppdaterBestillingService, tokenService, bestillingsKvitteringsService, kallLoggRepository);
         ReflectionTestUtils.setField(service, "tokenService", tokenService);
         ReflectionTestUtils.setField(service, "service", bestillingsKvitteringsService);
         ReflectionTestUtils.setField(service, "oppdaterBestillingService", oppdaterBestillingService);
@@ -70,7 +71,7 @@ class BestillingServiceSchedTest {
 
         @Test
         void sendBestilling_initialStatusIsOk() {
-            assertEquals("OK", service.STATUS);
+            assertEquals("OK", service.getStatus());
         }
 
         @Test
@@ -81,7 +82,7 @@ class BestillingServiceSchedTest {
 
             service.sendBestilling();
 
-            assertEquals("TOM", service.STATUS);
+            assertEquals("TOM", service.getStatus());
         }
 
         @Test
@@ -115,7 +116,7 @@ class BestillingServiceSchedTest {
         }
 
         @Test
-        void sendBestilling_whenPayloadContainsBestillingsNummer_callsHttpEndpoint() throws Exception {
+        void sendBestilling_whenPayloadContainsBestillingsNummer_callsHttpEndpoint() {
             stubPayloadWithBestilling();
             when(oppdaterBestillingService.updateKvitteringStatus(anyString())).thenReturn(1);
             stubRestClientSuccess();
@@ -126,7 +127,7 @@ class BestillingServiceSchedTest {
         }
 
         @Test
-        void sendBestilling_whenPayloadContainsBestillingsNummer_callsOppdaterBestillingService() throws Exception {
+        void sendBestilling_whenPayloadContainsBestillingsNummer_callsOppdaterBestillingService() {
             stubPayloadWithBestilling();
             when(oppdaterBestillingService.updateKvitteringStatus(anyString())).thenReturn(1);
             stubRestClientSuccess();
@@ -137,7 +138,7 @@ class BestillingServiceSchedTest {
         }
 
         @Test
-        void sendBestilling_whenPayloadContainsBestillingsNummer_savesKallLoggWithSuccessStatus() throws Exception {
+        void sendBestilling_whenPayloadContainsBestillingsNummer_savesKallLoggWithSuccessStatus() {
             stubPayloadWithBestilling();
             when(oppdaterBestillingService.updateKvitteringStatus(anyString())).thenReturn(1);
             stubRestClientSuccess();
@@ -150,21 +151,19 @@ class BestillingServiceSchedTest {
         }
 
         @Test
-        void sendBestilling_whenRestClientThrows_throwsRuntimeExceptionWithCause() {
+        void sendBestilling_whenRestClientThrows_throwsSchedServiceException() {
             stubPayloadWithBestilling();
-            when(restClient.post()).thenThrow(new RuntimeException("connection refused"));
+            when(restClient.post()).thenThrow(new SchedServiceException("connection refused"));
 
-            RuntimeException ex = assertThrows(RuntimeException.class, () -> service.sendBestilling());
-            assertEquals("Kunne ikke sende forespørselen", ex.getMessage());
-            assertNotNull(ex.getCause());
+            assertThrows(SchedServiceException.class, () -> service.sendBestilling());
         }
 
         @Test
         void sendBestilling_whenRestClientThrows_savesKallLoggWithErrorStatus() {
             stubPayloadWithBestilling();
-            when(restClient.post()).thenThrow(new RuntimeException("connection refused"));
+            when(restClient.post()).thenThrow(new SchedServiceException("connection refused"));
 
-            assertThrows(RuntimeException.class, () -> service.sendBestilling());
+            assertThrows(SchedServiceException.class, () -> service.sendBestilling());
 
             ArgumentCaptor<KallLogg> captor = ArgumentCaptor.forClass(KallLogg.class);
             verify(kallLoggRepository).save(captor.capture());
@@ -172,7 +171,7 @@ class BestillingServiceSchedTest {
         }
 
         @Test
-        void sendBestilling_whenOppdaterServiceThrows_throwsRuntimeException() throws Exception {
+        void sendBestilling_whenOppdaterServiceThrows_throwsRuntimeException() {
             stubPayloadWithBestilling();
             stubRestClientSuccess();
             when(oppdaterBestillingService.updateKvitteringStatus(anyString()))

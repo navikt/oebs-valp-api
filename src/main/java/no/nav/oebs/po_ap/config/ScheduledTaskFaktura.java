@@ -30,7 +30,7 @@ public class ScheduledTaskFaktura {
             fakturaServiceSched.sendFaktura();
 
             // Vent i 5 sekunder ..
-            if (Objects.equals(fakturaServiceSched.STATUS, "OK")) {
+            if (Objects.equals(fakturaServiceSched.getStatus(), "OK")) {
                 Thread.sleep(5000);
             }
 

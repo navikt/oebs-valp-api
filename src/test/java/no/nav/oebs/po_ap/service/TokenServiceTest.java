@@ -1,6 +1,5 @@
 package no.nav.oebs.po_ap.service;
 
-import no.nav.oebs.po_ap.db.entity.TokenResponse;
 import no.nav.oebs.po_ap.exception.SuppressedStackTraceException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -15,8 +14,6 @@ import java.net.URISyntaxException;
 import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)

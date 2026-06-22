@@ -28,10 +28,10 @@ public class FakturaKvitteringsController {
 	@PoApSwagger
 	@GetMapping(path = "/fakturakvittering", produces = MediaType.TEXT_PLAIN_VALUE + ";charset=UTF-8") //APPLICATION_JSON_VALUE + ";charset=UTF-8")
 	public String finnRefusjonskravtransaksjoner(
-			@RequestParam(name = "org_id", defaultValue = "202") Integer org_id,
-			@RequestParam(name = "faktura_num") @Parameter(description = "f.eks. A-2025/11133-1") String faktura_num)
+			@RequestParam(name = "org_id", defaultValue = "202") Integer orgId,
+			@RequestParam(name = "faktura_num") @Parameter(description = "f.eks. A-2025/11133-1") String fakturaNum)
 	{
 
-		return service.finnFakturaTransaksjoner(org_id, faktura_num);
+		return service.finnFakturaTransaksjoner(orgId, fakturaNum);
 	}
 }

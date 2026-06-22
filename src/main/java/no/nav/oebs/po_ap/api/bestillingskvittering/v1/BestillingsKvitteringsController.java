@@ -27,9 +27,9 @@ public class BestillingsKvitteringsController {
 	@PoApSwagger
 	@GetMapping(path = "/bestillingskvittering", produces = MediaType.TEXT_PLAIN_VALUE + ";charset=UTF-8")
 	public String finnBestillingsTransaksjoner(
-			@RequestParam(name = "org_id", defaultValue = "202") Integer org_id,
-			@RequestParam(name = "po_number") @Parameter(description = "f.eks. A-2024/10789HM01-15") String po_number)
+			@RequestParam(name = "org_id", defaultValue = "202") Integer orgId,
+			@RequestParam(name = "po_number") @Parameter(description = "f.eks. A-2024/10789HM01-15") String poNumber)
 	{
-		return service.finnBestillingsTransaksjoner(org_id, po_number);
+		return service.finnBestillingsTransaksjoner(orgId, poNumber);
 	}
 }
