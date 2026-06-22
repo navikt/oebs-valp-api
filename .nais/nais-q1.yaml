@@ -35,11 +35,15 @@ spec:
       enabled: true
       allowAllUsers: true
       tenant: trygdeetaten.no
+
+  observability:
+    autoInstrumentation:
+      enabled: true
+      runtime: java
       
   accessPolicy:
     inbound:
       rules:
-        - application: oebs-fullmakt-dev
         - application: tiltaksokonomi
           namespace: team-mulighetsrommet
           cluster: dev-gcp
