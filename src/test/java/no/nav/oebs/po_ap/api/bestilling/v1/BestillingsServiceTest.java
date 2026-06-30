@@ -74,7 +74,7 @@ class BestillingsServiceTest {
             service.lageBestilling("payload");
 
             verify(plsqlProcedureRepository).executeInOutProcedure(
-                    eq("xxrtv_po_ap_api_pkg.xxrtv_bestilling"), anyString());
+                    eq("apps.xxrtv_po_ap_api_pkg.xxrtv_bestilling"), anyString());
         }
     }
 }
