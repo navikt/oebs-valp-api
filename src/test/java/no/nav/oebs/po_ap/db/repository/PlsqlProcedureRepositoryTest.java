@@ -26,13 +26,19 @@ class PlsqlProcedureRepositoryTest {
     @Test
     void executeInOutProcedure_withTooManyDots_throwsIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class,
-                () -> repository.executeInOutProcedure("pakke.prosedyre.ekstra", "{}"));
+                () -> repository.executeInOutProcedure("schema.pakke.prosedyre.ekstra", "{}"));
+    }
+
+    @Test
+    void executeInOutProcedure_withTooFewDots_throwsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class,
+                () -> repository.executeInOutProcedure("pakke.prosedyre", "{}"));
     }
 
     @Test
     void executeInOutProcedure_withValidFormat_doesNotThrowOnValidation() {
         // Validation passes; call fails at JDBC level without a DB connection
         assertThrows(Exception.class,
-                () -> repository.executeInOutProcedure("pakke.prosedyre", "{}"));
+                () -> repository.executeInOutProcedure("schema.pakke.prosedyre", "{}"));
     }
 }

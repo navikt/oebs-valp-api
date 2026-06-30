@@ -15,7 +15,7 @@ import tools.jackson.databind.json.JsonMapper;
 @Transactional(noRollbackFor = { Exception.class })
 public class BestillingsService extends ObjektMaps {
 
-	private static final String PLSQL_PROCEDURE = "xxrtv_po_ap_api_pkg.xxrtv_bestilling";
+	private static final String PLSQL_PROCEDURE = "apps.xxrtv_po_ap_api_pkg.xxrtv_bestilling";
 
 	private final PlsqlProcedureRepository plsqlProcedureRepository;
 

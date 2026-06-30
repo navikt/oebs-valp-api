@@ -57,7 +57,7 @@ class BestillingsKvitteringsServiceTest {
 
         ArgumentCaptor<String> jsonCaptor = ArgumentCaptor.forClass(String.class);
         verify(plsqlProcedureRepository).executeInOutProcedure(
-                eq("xxrtv_po_ap_api_pkg.xxrtv_bestillingskvittering"),
+                eq("apps.xxrtv_po_ap_api_pkg.xxrtv_bestillingskvittering"),
                 jsonCaptor.capture());
 
         String json = jsonCaptor.getValue();
@@ -73,6 +73,6 @@ class BestillingsKvitteringsServiceTest {
         service.finnBestillingsTransaksjoner(202, "PROCESSED");
 
         verify(plsqlProcedureRepository).executeInOutProcedure(
-                eq("xxrtv_po_ap_api_pkg.xxrtv_bestillingskvittering"), anyString());
+                eq("apps.xxrtv_po_ap_api_pkg.xxrtv_bestillingskvittering"), anyString());
     }
 }

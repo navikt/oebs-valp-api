@@ -57,7 +57,7 @@ class FakturaKvitteringsServiceTest {
 
         ArgumentCaptor<String> jsonCaptor = ArgumentCaptor.forClass(String.class);
         verify(plsqlProcedureRepository).executeInOutProcedure(
-                eq("xxrtv_po_ap_api_pkg.xxrtv_fakturakvittering"),
+                eq("apps.xxrtv_po_ap_api_pkg.xxrtv_fakturakvittering"),
                 jsonCaptor.capture());
 
         String json = jsonCaptor.getValue();
@@ -73,6 +73,6 @@ class FakturaKvitteringsServiceTest {
         service.finnFakturaTransaksjoner(202, "PROCESSED");
 
         verify(plsqlProcedureRepository).executeInOutProcedure(
-                eq("xxrtv_po_ap_api_pkg.xxrtv_fakturakvittering"), anyString());
+                eq("apps.xxrtv_po_ap_api_pkg.xxrtv_fakturakvittering"), anyString());
     }
 }

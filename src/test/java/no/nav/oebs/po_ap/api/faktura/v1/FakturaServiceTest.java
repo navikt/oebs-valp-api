@@ -74,7 +74,7 @@ class FakturaServiceTest {
             service.lagreFaktura("payload");
 
             verify(plsqlProcedureRepository).executeInOutProcedure(
-                    eq("xxrtv_po_ap_api_pkg.xxrtv_faktura"), anyString());
+                    eq("apps.xxrtv_po_ap_api_pkg.xxrtv_faktura"), anyString());
         }
     }
 }

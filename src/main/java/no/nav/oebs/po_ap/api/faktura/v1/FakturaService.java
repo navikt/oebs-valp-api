@@ -14,7 +14,7 @@ import tools.jackson.databind.json.JsonMapper;
 @Transactional(noRollbackFor = { Exception.class })
 public class FakturaService extends ObjektMaps {
 
-	private static final String PLSQL_PROCEDURE = "xxrtv_po_ap_api_pkg.xxrtv_faktura";
+	private static final String PLSQL_PROCEDURE = "apps.xxrtv_po_ap_api_pkg.xxrtv_faktura";
 
 	private final PlsqlProcedureRepository plsqlProcedureRepository;
 
