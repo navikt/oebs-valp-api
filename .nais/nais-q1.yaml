@@ -11,7 +11,7 @@ spec:
   image: {{ image }}
   port: 8080
   envFrom:
-    - secret: oebs-po-ap-api-q2
+    - secret: oebs-po-api-q2
   replicas:
     min: 2
     max: 2
