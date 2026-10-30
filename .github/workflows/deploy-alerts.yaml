@@ -1,0 +1,25 @@
+name: Deploy alerts to NAIS for personhendelse-consumer-oebs
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .nais/alertconfig-dev.yaml
+      - .nais/prometheusrule-dev.yaml
+      - .github/workflows/deploy-alerts.yaml
+
+jobs:
+  deploy-dev:
+    name: Deploy alerts to dev-gcp
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+      - name: Deploy alerts to dev-fss
+        uses: nais/deploy/actions/deploy@1064e26587ab2794266a35f477387e561899a7ef
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-fss
+          RESOURCE: .nais/alertconfig-dev.yaml,.nais/prometheusrule-dev.yaml

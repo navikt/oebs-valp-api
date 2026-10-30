@@ -1,0 +1,24 @@
+apiVersion: "monitoring.coreos.com/v1"
+kind: PrometheusRule
+metadata:
+  name: oebs-po-ap-api
+  namespace: team-oebs
+  labels:
+    team: team-oebs
+spec:
+  groups:
+    - name: oebs-po-ap-api
+      rules:
+        - alert: OebsPoApApiSlackTest
+          expr: vector(1) == 1
+          for: 0m
+          annotations:
+            summary: "Test alarm for Slack-integrasjon"
+            consequence: "Dette er en testalarm for å verifisere at Slack-linken fungerer"
+            action: "Ignorer denne alarmen når testen er ferdig"
+            documentation: "https://prometheus.io/docs/prometheus/latest/querying/basics/"
+            sla: "Respond within 15 minutes"
+          labels:
+            severity: warning
+            alert_routing_slack: team-oebs-alerts-dev
+            alert_type: custom

@@ -1,0 +1,25 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: oebs-po-ap-api
+  namespace: team-oebs
+  labels:
+    alertmanagerConfig: oebs-po-ap-api
+spec:
+  route:
+    receiver: slack-notifications
+    matchers:
+      - name: alert_routing_slack
+        value: team-oebs-alerts-dev
+  receivers:
+    - name: slack-notifications
+      slackConfigs:
+        - apiURL:
+            name: slack-webhook-secret
+            key: webhookUrl
+          channel: "#team-oebs-alerts-dev"
+          sendResolved: true
+          title:  "🚨 {{ .CommonLabels.alertname }}"
+          text: '{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+          httpConfig:
+            proxyUrl: http://webproxy.nais:8088
