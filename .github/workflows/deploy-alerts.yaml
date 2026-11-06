@@ -10,7 +10,7 @@ on:
 
 jobs:
   deploy-dev:
-    name: Deploy alerts to dev-gcp
+    name: Deploy alerts to dev-fss
     runs-on: ubuntu-latest
     permissions:
       contents: read
