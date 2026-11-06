@@ -1,0 +1,120 @@
+apiVersion: "monitoring.coreos.com/v1"
+kind: PrometheusRule
+metadata:
+  name: oebs-po-ap-api
+  namespace: team-oebs
+  labels:
+    team: team-oebs
+spec:
+  groups:
+    - name: oebs-po-ap-api
+      rules:
+        - alert: OebsPoApApiJvmHeapPressure
+          expr: >
+            jvm_memory_used_bytes{area="heap", namespace="team-oebs", container="oebs-po-ap-api"}
+            /
+            (jvm_memory_max_bytes{area="heap", namespace="team-oebs", container="oebs-po-ap-api"} > 0)
+            > 0.85
+          for: 5m
+          annotations:
+            summary: "JVM heap usage is above 85% ({{ $value | humanizePercentage }})"
+            consequence: "Order, invoice and receipt processing may be interrupted if the service runs out of memory"
+            action: "Check heap usage, garbage collection and JVM memory settings"
+            documentation: "https://prometheus.io/docs/prometheus/latest/querying/basics/"
+            sla: "Respond within 1 hour during business hours"
+          labels:
+            severity: warning
+            alert_routing_slack: team-oebs-alerts
+            alert_type: custom
+
+        - alert: OebsPoApApiDatabaseConnectionsPending
+          expr: hikaricp_connections_pending{namespace="team-oebs", container="oebs-po-ap-api"} > 0
+          for: 2m
+          annotations:
+            summary: "Database connections are queued ({{ $value }} pending)"
+            consequence: "Order, invoice and receipt processing may be delayed or fail while waiting for Oracle connections"
+            action: "Check Oracle availability, slow queries and HikariCP pool usage"
+            documentation: "https://prometheus.io/docs/prometheus/latest/querying/basics/"
+            sla: "Respond within 15 minutes"
+          labels:
+            severity: warning
+            alert_routing_slack: team-oebs-alerts
+            alert_type: custom
+
+        - alert: OebsPoApApiPodRestarts
+          expr: increase(kube_pod_container_status_restarts_total{namespace="team-oebs", container="oebs-po-ap-api"}[1h]) > 2
+          for: 0m
+          annotations:
+            summary: "Pod has restarted {{ $value }} times in the last hour"
+            consequence: "Order, invoice and receipt processing may be interrupted"
+            action: "Check pod logs and termination reasons for the cause of the restarts"
+            documentation: "https://prometheus.io/docs/prometheus/latest/querying/basics/"
+            sla: "Respond within 30 minutes during business hours"
+          labels:
+            severity: warning
+            alert_routing_slack: team-oebs-alerts
+            alert_type: custom
+
+        - alert: OebsPoApApiErrorLogsHigh
+          expr: increase(logback_events_total{level="error", namespace="team-oebs", container="oebs-po-ap-api"}[5m]) > 3
+          for: 2m
+          annotations:
+            summary: "High rate of ERROR log messages ({{ $value }} in last 5 min)"
+            consequence: "Order, invoice or receipt processing may be failing"
+            action: "Check application logs and the availability of Oracle and tiltaksokonomi"
+            documentation: "https://prometheus.io/docs/prometheus/latest/querying/basics/"
+            sla: "Respond within 1 hour during business hours"
+          labels:
+            severity: warning
+            alert_routing_slack: team-oebs-alerts
+            alert_type: custom
+
+        - alert: OebsPoApApiInstanceDown
+          expr: kube_deployment_status_replicas_available{namespace="team-oebs", deployment="oebs-po-ap-api"} == 0
+          for: 10m
+          annotations:
+            summary: "oebs-po-ap-api has no available replicas"
+            consequence: "The API is unavailable and order, invoice and receipt processing has stopped"
+            action: "Check deployment status, pod events and application logs"
+          labels:
+            severity: warning
+            alert_routing_slack: team-oebs-alerts
+            alert_type: custom
+
+        - alert: OebsPoApApiHigh4xxRate
+          expr: |
+            (
+              sum(rate(http_server_requests_seconds_count{namespace="team-oebs", app="oebs-po-ap-api", uri=~"/api/v1/.*", status=~"4.."}[5m]))
+              /
+              clamp_min(sum(rate(http_server_requests_seconds_count{namespace="team-oebs", app="oebs-po-ap-api", uri=~"/api/v1/.*"}[5m])), 0.1)
+            ) > 0.25
+            and
+            sum(rate(http_server_requests_seconds_count{namespace="team-oebs", app="oebs-po-ap-api", uri=~"/api/v1/.*"}[5m])) > 0.2
+          for: 10m
+          annotations:
+            summary: "More than 25% of API requests return 4xx responses"
+            consequence: "Clients may be unable to submit orders or invoices, or retrieve receipts"
+            action: "Check response codes, client requests and recent API changes"
+          labels:
+            severity: warning
+            alert_routing_slack: team-oebs-alerts
+            alert_type: custom
+
+        - alert: OebsPoApApiHighErrorRate
+          expr: |
+            (
+              sum(rate(http_server_requests_seconds_count{namespace="team-oebs", app="oebs-po-ap-api", uri=~"/api/v1/.*", status=~"5.."}[5m]))
+              /
+              clamp_min(sum(rate(http_server_requests_seconds_count{namespace="team-oebs", app="oebs-po-ap-api", uri=~"/api/v1/.*"}[5m])), 0.1)
+            ) > 0.05
+            and
+            sum(rate(http_server_requests_seconds_count{namespace="team-oebs", app="oebs-po-ap-api", uri=~"/api/v1/.*"}[5m])) > 0.5
+          for: 10m
+          annotations:
+            summary: "More than 5% of API requests return 5xx responses"
+            consequence: "Clients cannot reliably submit orders or invoices, or retrieve receipts"
+            action: "Check logs and traces for failed requests and verify Oracle and tiltaksokonomi availability"
+          labels:
+            severity: warning
+            alert_routing_slack: team-oebs-alerts
+            alert_type: custom
